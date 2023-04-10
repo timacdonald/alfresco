@@ -1,0 +1,9 @@
+parameters:
+    level: 8
+    paths:
+        - bin/alfresco
+        - resources/components
+        - src
+includes:
+    - ./phpstan-baseline.neon
+    - ./vendor/thecodingmachine/phpstan-safe-rule/phpstan-safe-rule.neon 

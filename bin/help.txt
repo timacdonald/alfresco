@@ -1,0 +1,33 @@
+
+<bold>🍃 <🌈>Alfresco</🌈></bold>
+A fresh take on the PHP documentation website generation.
+
+<yellow><bold>USAGE</bold></yellow>
+
+    alfresco [--options] [generators...]
+
+<yellow><bold>OPTIONS</bold></yellow>
+
+    <green><bold>--manual</bold></green>
+        Path to the already generated manual file.
+        <dim>Usage: <bold>alfresco --manual=../doc-base/manual.xml</bold></dim>
+
+    <green><bold>--no-generation</bold></green>
+        Do not run the generator. Can be useful to re-generate only the indexes.
+        <dim>Usage: <bold>alfresco --no-generation</bold></dim>
+
+    <green><bold>--no-index</bold></green>
+        Do not run the generator's indexes. Can be useful if wanting to re-generate but the indexes are not stale.
+        <dim>Usage: <bold>alfresco --no-index</bold></dim>
+
+    <green><bold>--no-ansi</bold></green>
+        Turn off colors.
+        <dim>Usage: <bold>alfresco --no-ansi</bold></dim>
+
+    <green><bold>--debug</bold></green>
+        Turn on debug generator output.
+        <dim>Usage: <bold>alfresco --debug</bold></dim>
+
+    <green><bold>--verbose</bold></green>
+        Turn on verbose build output.
+        <dim>Usage: <bold>alfresco --debug</bold></dim>

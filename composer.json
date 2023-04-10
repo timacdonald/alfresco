@@ -1,0 +1,41 @@
+{
+    "name": "timacdonald/alfresco",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tim MacDonald",
+            "email": "hello@timacdonald.me"
+        }
+    ],
+    "require": {
+        "php": "8.2.*",
+        "illuminate/support": "^10.6",
+        "spatie/once": "^3.1",
+        "spatie/shiki-php": "^1.3",
+        "thecodingmachine/safe": "^2.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Alfresco\\": "src"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require-dev": {
+        "pestphp/pest": "^2.5",
+        "phpstan/phpstan": "^1.10",
+        "symfony/var-dumper": "^6.2",
+        "thecodingmachine/phpstan-safe-rule": "^1.2"
+    }
+}

@@ -1,0 +1,174 @@
+#!/usr/bin/env php
+<?php
+
+use Alfresco\Configuration;
+use Alfresco\Container;
+use Alfresco\Contracts\DependsOnIndexes;
+use Alfresco\Manual;
+use Alfresco\Node;
+use Alfresco\Output;
+use Alfresco\Process;
+use Alfresco\Website\Generator as Website;
+use Illuminate\Support\Collection;
+
+use function Alfresco\measure;
+use function Safe\file_get_contents;
+
+require __DIR__.'/../vendor/autoload.php';
+error_reporting(E_ALL);
+
+/*
+ * Resolve CLI options.
+ *
+ * Collect the user's CLI input, parse it, and set some defaults.
+ */
+
+[$input, $options, $generators] = collect($argv)
+    ->skip(1)
+    ->pipe(fn (Collection $input) => [
+        $input,
+        $input->filter(fn (string $value) => str_starts_with($value, '-'))
+            ->map(fn (string $option) => explode('=', $option))
+            ->mapWithKeys(fn (array $bits) => [$bits[0] => $bits[1] ?? true])
+            ->tap(function (Collection $options) {
+                if ($options->has('--help')) {
+                    return;
+                }
+
+                if (! $options->has('--manual')) {
+                    echo "The [{$option}] argument is required.";
+                    exit(1);
+                }
+            })
+            ->pipe(fn (Collection $options) => collect([
+                '--no-generation' => false,
+                '--no-index' => false,
+                '--no-ansi' => false,
+                '--debug' => false,
+                '--verbose' => false,
+            ])->merge($options)),
+        $input->reject(fn (string $value) => str_starts_with($value, '-'))
+            ->whenEmpty(fn () => collect([Website::class.':en'])),
+    ]);
+
+/*
+ * Bootstrapping.
+ *
+ * We will resolve the container and merge in the user's configuration.
+ */
+
+/** @var Container */
+$container = require __DIR__.'/../bootstrap.php';
+
+$config = $container->make(Configuration::class)->merge([
+    'manual_path' => $options->get('--manual'),
+    'generators' => $generators->map(fn (string $generator) => [
+        'class' => str($generator)->before(':')->value(),
+        'arguments' => str($generator)->contains(':')
+            ? str($generator)->after(':')->explode(',')
+            : [],
+    ]),
+    'generation' => ! $options->get('--no-generation'),
+    'index' => ! $options->get('--no-index'),
+    'output_ansi' => ! $options->get('--no-ansi'),
+    'debug' => $options->get('--debug'),
+]);
+
+$output = $container->make(Output::class);
+
+if ($input->contains('--help')) {
+    $output(file_get_contents(__DIR__.'/help.txt'));
+    exit;
+}
+
+$output->line('🍃 <🌈>Alfresco</🌈>');
+
+/*
+ * Resolve generators and their indexes.
+ *
+ * Next, we resolve the configured generators. Generators may specify the
+ * indexes they are dependent on. We also resolve the indexes, as we need to
+ * process them first.
+ */
+
+[$generators, $indexes] = $config->get('generators')
+    ->map(fn (array $config) => $container->make(
+        $config['class'],
+        $config['arguments']
+    ))->pipe(fn (Collection $generators) => [
+        $generators,
+        $generators->whereInstanceOf(DependsOnIndexes::class)
+            ->map(fn (DependsOnIndexes $generator) => $generator->indexes())
+            ->flatten(),
+    ]);
+
+/*
+ * Resolve the manual and process.
+ *
+ * The manual represents the documentation file and allows us to easily iterate
+ * over the XML contents. The process is a function that iterates over the manual
+ * with the given generators / indexes to produce the desired output.
+ */
+
+$manual = $container->make(Manual::class);
+$process = $container->make(Process::class);
+
+/*
+ * Run indexes.
+ *
+ * The indexes perform an initial loop over the documentation to perform any
+ * useful read-ahead actions. When reading large XML files we are unable to
+ * "look ahead".  Doing an initial iteration allows us to collect useful
+ * information for generators which allows them to, kind, "look ahead".
+ */
+
+if ($config->get('index')) {
+    $output->line('<blue>Indexing.</blue>');
+
+    $duration = measure(fn () => $process($manual, $indexes, function (Node $node, int $i) use ($options, $output) {
+        if ($options->get('--verbose')) {
+            $output->line("Handling: {$node->name}");
+        } elseif ($i % 5000 === 0) {
+            $output('<🌈>.</🌈>');
+        }
+    }));
+
+    $output->line("Indexing completed in <green><bold>{$duration}</bold></green> seconds.");
+} else {
+    $output->line('<yellow>Skipping indexing.</yellow>');
+}
+
+/*
+ * Resolve another instance of the manul.
+ *
+ * As the manual iterates over XML, it internally handles a "cursor". After
+ * running the indexes the cursor has reached the end of the document. Instead
+ * of "rewinding" the cursor, we will just resolve a new manual instance.
+ */
+
+$manual = $container->make(Manual::class);
+
+/*
+ * Run generators.
+ *
+ * This is where the magic happens 💫. We will now process the generators to
+ * create the desired builds.
+ */
+
+if ($config->get('generation')) {
+    $output->line('<blue>Generating.</blue>');
+
+    $duration = measure(fn () => $process($manual, $generators, function (Node $node, int $i) use ($options, $output) {
+        if ($options->get('--verbose')) {
+            $output->line("Handling: {$node->name}");
+        } elseif ($i % 5000 === 0) {
+            $output('<🌈>.</🌈>');
+        }
+    }));
+
+    $output->line("Generation completed in <green><bold>{$duration}</bold></green> seconds.");
+} else {
+    $output->line('<yellow>Skipping generation.</yellow>');
+}
+
+$output->line('<green>Finished.</green>');
