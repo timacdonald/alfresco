@@ -216,7 +216,9 @@ class Node
 
     public function doesNotObjectToChunking(): bool
     {
-        return ($this->attributes[Manual::XMLNS_PHD]['chunk'] ?? 'true') !== 'false' && $this->hasId();
+        return ($this->attributes[Manual::XMLNS_PHD]['chunk'] ?? 'true') !== 'false'
+            && ! str_contains($this->attributes[Manual::XMLNS_DOCBOOK]['annotations'] ?? '', 'chunk:false')
+            && $this->hasId();
     }
 
     public function innerContent(): string
