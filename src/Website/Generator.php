@@ -209,8 +209,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
             BASH);
 
         system(<<< 'BASH'
-            npx tailwindcss -i ./resources/style.css -o ./build/style.css
-            cp ./resources/script.js ./build/script.js
+            npx tailwindcss -i ./resources/style.css -o ./build/output/style.css
+            cp ./resources/script.js ./build/output/script.js
             BASH);
     }
 
