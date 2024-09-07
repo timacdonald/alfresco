@@ -24,10 +24,12 @@ bin/alfresco --help
 
 ## Setup instructions (WIP)
 
-1. Clone the doc-base and documentation repository, for example:
-
 ```
 git clone git@github.com:timacdonald/alfresco.git
+cd alfresco
+composer install
+npm install
+cd ../
 git clone git@github.com:php/doc-base.git
 git clone git@github.com:php/doc-en.git en
 cd en
