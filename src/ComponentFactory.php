@@ -12,6 +12,8 @@ use Stringable;
 
 class ComponentFactory
 {
+    private array $resolverCache = [];
+
     public function __construct(protected string $path, protected Translation $translation)
     {
         //
@@ -94,7 +96,7 @@ class ComponentFactory
 
     protected function resolver(string $path): Closure
     {
-        return (static fn (string $__path) => require $__path)("{$this->path}/{$path}.php");
+        return $this->resolverCache[$path] ??= (static fn (string $__path) => require $__path)("{$this->path}/{$path}.php");
     }
 
     /**

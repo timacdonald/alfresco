@@ -127,9 +127,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'author' => $this->renderAuthor($node),
             'authorgroup' => $this->renderAuthorGroup($node),
             'book' => $this->renderBook($node),
-            'classname' => $this->renderClassName($node),
             'caution' => $this->renderCaution($node),
             'chapter' => $this->renderChapter($node),
+            'classname' => $this->renderClassName($node),
             'code' => $this->renderCode($node),
             'command' => $this->renderCommand($node),
             'computeroutput' => $this->renderComputerOutput($node),
@@ -164,6 +164,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'para' => $this->renderPara($node),
             'parameter' => $this->renderParameter($node),
             'personname' => $this->renderPersonName($node),
+            'phpdoc' => $this->renderPhpDoc($node),
             'preface' => $this->renderPreface($node),
             'procedure' => $this->renderProcedure($node),
             'productname' => $this->renderProductName($node),
@@ -191,6 +192,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'thead' => $this->renderTHead($node),
             'tip' => $this->renderTip($node),
             'title' => $this->renderTitle($node),
+            'titleabbrev' => $this->renderTitleAbbrev($node),
             'type' => $this->renderType($node),
             'variablelist' => $this->renderVariableList($node),
             'varlistentry' => $this->renderVarListEntry($node),
@@ -198,7 +200,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'warning' => $this->renderWarning($node),
             'xref' => $this->renderXref($node),
             'year' => $this->renderYear($node),
-            default => dd('Unknown node', $node->name),
+            default => dd('Unknown node', $node->name, $node->parents()),
         }, fn (string|Slotable $content) => $this->debug
             ? $this->withDebuggingInfo($node, $content)
             : $content);
@@ -890,6 +892,14 @@ class Generator implements DependsOnIndexes, GeneratorContract
     }
 
     /**
+     * Unused tag.
+     */
+    protected function renderPhpDoc(Node $node): Slotable|string
+    {
+        return '';
+    }
+
+    /**
      * Introductory matter preceding the first chapter of a book.
      *
      * @see https://tdg.docbook.org/tdg/5.2/preface.html
@@ -1238,6 +1248,16 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'level' => 2,
             'link' => Link::fragment($node->innerContent()),
         ]);
+    }
+
+    /**
+     * The abbreviation of a title.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/titleabbrev.html
+     */
+    protected function renderTitleAbbrev(Node $node): Slotable|string
+    {
+        return '';
     }
 
     /**
