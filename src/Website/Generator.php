@@ -154,6 +154,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'link' => $this->renderLink($node),
             'listitem' => $this->renderListItem($node),
             'literal' => $this->renderLiteral($node),
+            'literallayout' => $this->renderLiteralLayout($node),
             'member' => $this->renderMember($node),
             'note' => $this->renderNote($node),
             'option' => $this->renderOption($node),
@@ -194,6 +195,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'title' => $this->renderTitle($node),
             'titleabbrev' => $this->renderTitleAbbrev($node),
             'type' => $this->renderType($node),
+            'userinput' => $this->renderUserInput($node),
             'variablelist' => $this->renderVariableList($node),
             'varlistentry' => $this->renderVarListEntry($node),
             'varname' => $this->renderVarName($node),
@@ -776,6 +778,16 @@ class Generator implements DependsOnIndexes, GeneratorContract
     }
 
     /**
+     * A block of text in which line breaks and white space are to be reproduced faithfully.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/literallayout.html
+     */
+    protected function renderLiteralLayout(Node $node): Slotable|string
+    {
+        return $this->render->tag('pre');
+    }
+
+    /**
      * A message set off from the text.
      *
      * @see https://tdg.docbook.org/tdg/5.2/note.html
@@ -1257,7 +1269,19 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderTitleAbbrev(Node $node): Slotable|string
     {
+        // TODO: would be cool if we could return a "skip" instruction to just skip over the entire node and its inner content.
+        // This is only used for the menu.
         return '';
+    }
+
+    /**
+     * Data entered by the user.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/userinput.html
+     */
+    protected function renderUserInput(Node $node): Slotable|string
+    {
+        return $this->render->component('inline-code');
     }
 
     /**
