@@ -16,8 +16,9 @@ class CodeReplacer
 
     public function replace(string $original): string
     {
+        // TODO make this look for a .replacement.php or something better.
         return $original;
-        if (! file_exists($path = $this->directory.'/'.md5($original))) {
+        if (! file_exists($path = $this->directory.'/'.hash('xxh128', $original))) {
             return $original;
         }
 
