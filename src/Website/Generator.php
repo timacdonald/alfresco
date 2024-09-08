@@ -127,6 +127,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'author' => $this->renderAuthor($node),
             'authorgroup' => $this->renderAuthorGroup($node),
             'book' => $this->renderBook($node),
+            'classname' => $this->renderClassName($node),
             'caution' => $this->renderCaution($node),
             'chapter' => $this->renderChapter($node),
             'code' => $this->renderCode($node),
@@ -147,6 +148,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'info' => $this->renderInfo($node),
             'informalexample' => $this->renderInformalExample($node),
             'informaltable' => $this->renderInformalTable($node),
+            'interfacename' => $this->renderInterfaceName($node),
             'itemizedlist' => $this->renderItemizedList($node),
             'legalnotice' => $this->renderLegalNotice($node),
             'link' => $this->renderLink($node),
@@ -155,6 +157,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'member' => $this->renderMember($node),
             'note' => $this->renderNote($node),
             'option' => $this->renderOption($node),
+            'optional' => $this->renderOptional($node),
             'orderedlist' => $this->renderOrderedList($node),
             'othercredit' => $this->renderOtherCredit($node),
             'othername' => $this->renderOtherName($node),
@@ -172,12 +175,14 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'sect1' => $this->renderSect1($node),
             'sect2' => $this->renderSect2($node),
             'sect3' => $this->renderSect3($node),
+            'sect4' => $this->renderSect4($node),
             'section' => $this->renderSection($node),
             'set' => $this->renderSet($node),
             'simpara' => $this->renderSimPara($node),
             'simplelist' => $this->renderSimpleList($node),
             'step' => $this->renderStep($node),
             'surname' => $this->renderSurname($node),
+            'synopsis' => $this->renderSynopsis($node),
             'systemitem' => $this->renderSystemItem($node),
             'table' => $this->renderTable($node),
             'tbody' => $this->renderTBody($node),
@@ -343,6 +348,19 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderBook(Node $node): Slotable|string
     {
         return '';
+    }
+
+    /**
+     * The name of a class, in the object-oriented programming sense.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/classname.html
+     */
+    protected function renderClassName(Node $node): Slotable|string
+    {
+        return $this->render->component('inline-code')
+            ->wrapSlot($this->render->component('link', [
+                'link' => Link::internal("class.{$node->innerContent()}"),
+            ]));
     }
 
     /**
@@ -674,6 +692,19 @@ class Generator implements DependsOnIndexes, GeneratorContract
     }
 
     /**
+     * The name of an interface.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/interfacename.html
+     */
+    protected function renderInterfaceName(Node $node): Slotable|string
+    {
+        return $this->render->component('inline-code')
+            ->wrapSlot($this->render->component('link', [
+                'link' => Link::internal("class.{$node->innerContent()}"),
+            ]));
+    }
+
+    /**
      * A list in which each entry is marked with a bullet or other dingbat.
      *
      * @see https://tdg.docbook.org/tdg/5.2/itemizedlist.html
@@ -760,6 +791,23 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderOption(Node $node): Slotable|string
     {
         return $this->render->component('emphasised-literal');
+    }
+
+    /**
+     * Optional information.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/optional.html
+     */
+    protected function renderOptional(Node $node): Slotable|string
+    {
+        if (! $node->hasAncestor('synopsis')) {
+            $this->unhandledNode($node, 'Not sure how to handle this outside of synopsis');
+        }
+
+        return $this->render->wrapper(
+            before: '[',
+            after: ']',
+        );
     }
 
     /**
@@ -962,6 +1010,16 @@ class Generator implements DependsOnIndexes, GeneratorContract
     }
 
     /**
+     * A subsection within a sect3.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/sect4.html
+     */
+    protected function renderSect4(Node $node): Slotable|string
+    {
+        return '';
+    }
+
+    /**
      * A recursive section.
      *
      * @see https://tdg.docbook.org/tdg/5.2/section.html
@@ -1023,6 +1081,17 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderSurname(Node $node): Slotable|string
     {
         return $this->render->inlineText();
+    }
+
+    /**
+     * A general-purpose element for representing the syntax of commands or functions.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/synopsis.html
+     */
+    protected function renderSynopsis(Node $node): Slotable|string
+    {
+        // Maybe not this?
+        return $this->render->component('program-listing');
     }
 
     /**
