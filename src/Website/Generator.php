@@ -202,7 +202,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'warning' => $this->renderWarning($node),
             'xref' => $this->renderXref($node),
             'year' => $this->renderYear($node),
-            default => dd('Unknown node', $node->name, $node->parents()),
+            default => tap('', fn () => dump('Unknown node', $node->name, $node->parents())),
         }, fn (string|Slotable $content) => $this->debug
             ? $this->withDebuggingInfo($node, $content)
             : $content);
