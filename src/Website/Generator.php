@@ -124,6 +124,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'abbrev' => $this->renderAbbrev($node),
             'abstract' => $this->renderAbstract($node),
             'acronym' => $this->renderAcronym($node),
+            'alt' => $this->renderAlt($node),
             'author' => $this->renderAuthor($node),
             'authorgroup' => $this->renderAuthorGroup($node),
             'book' => $this->renderBook($node),
@@ -145,6 +146,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'firstname' => $this->renderFirstName($node),
             'function' => $this->renderFunction($node),
             'holder' => $this->renderHolder($node),
+            'imageobject' => $this->renderImageObject($node),
+            'imagedata' => $this->renderImageData($node),
             'info' => $this->renderInfo($node),
             'informalexample' => $this->renderInformalExample($node),
             'informaltable' => $this->renderInformalTable($node),
@@ -155,6 +158,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'listitem' => $this->renderListItem($node),
             'literal' => $this->renderLiteral($node),
             'literallayout' => $this->renderLiteralLayout($node),
+            'mediaobject' => $this->renderMediaObject($node),
             'member' => $this->renderMember($node),
             'note' => $this->renderNote($node),
             'option' => $this->renderOption($node),
@@ -316,6 +320,16 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderAcronym(Node $node): Slotable|string
     {
         return $this->render->tag('abbr');
+    }
+
+    /**
+     * A text-only annotation, often used for accessibility.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/alt.html
+     */
+    protected function renderAlt(Node $node): Slotable|string
+    {
+        return '';
     }
 
     /**
@@ -638,6 +652,34 @@ class Generator implements DependsOnIndexes, GeneratorContract
     }
 
     /**
+     * Pointer to external image data.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/imagedata.html
+     */
+    protected function renderImageData(Node $node): Slotable|string
+    {
+        // TODO: this needs to point to a public image. We need an indexer that
+        // publishes the files, then we can just `pull` the image when we encounter
+        // it while generating. Should also include the `alt` text.
+        return $this->render->tag(
+            as: 'img',
+            attributes: [
+                'src' => $node->attribute('fileref'),
+            ],
+        );
+    }
+
+    /**
+     * A wrapper for image data and its associated meta-information.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/imageobject.html
+     */
+    protected function renderImageObject(Node $node): Slotable|string
+    {
+        return '';
+    }
+
+    /**
      * The name of the individual or organization that holds a copyright.
      *
      * This tag is only used on the homepage to highlight the "PHP
@@ -755,6 +797,16 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderListItem(Node $node): Slotable|string
     {
         return $this->render->tag('li');
+    }
+
+    /**
+     * A displayed media object (video, audio, image, etc.).
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/mediaobject.html
+     */
+    protected function renderMediaObject(Node $node): Slotable|string
+    {
+        return '';
     }
 
     /**

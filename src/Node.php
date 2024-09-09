@@ -73,6 +73,11 @@ class Node
         });
     }
 
+    public function attribute(string $name): string
+    {
+        return $this->attributes[Manual::XMLNS_DOCBOOK][$name];
+    }
+
     public function isWhitespace(): bool
     {
         return in_array($this->type, [
