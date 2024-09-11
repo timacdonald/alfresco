@@ -128,6 +128,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'author' => $this->renderAuthor($node),
             'authorgroup' => $this->renderAuthorGroup($node),
             'book' => $this->renderBook($node),
+            'caption' => $this->renderCaption($node),
             'caution' => $this->renderCaution($node),
             'chapter' => $this->renderChapter($node),
             'classname' => $this->renderClassName($node),
@@ -365,6 +366,18 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderBook(Node $node): Slotable|string
     {
+        return '';
+    }
+
+    /**
+     * A caption.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/caption.html
+     */
+    protected function renderCaption(Node $node): Slotable|string
+    {
+        // TODO this needs to be included in the image indexer and should be rendered
+        // as a figurecaption.
         return '';
     }
 
