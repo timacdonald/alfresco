@@ -21,7 +21,7 @@ return fn (
         after: $render->tag(
             as: 'span',
             attributes: [
-                'aria-hidden' => true,
+                'aria-hidden' => 'true',
                 'class' => 'hidden items-center justify-center group-hover:flex leading-none absolute w-5 h-full -right-7 top-0',
             ],
             after: $render->component('icon.link'),

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 #docsearch .docsearch-btn {
-    color: theme('colors.violet.400');
+    color: theme('colors.violet.500');
     height: 33px;
     background: theme('colors.violet.50/50');
     border: 1px solid theme('colors.violet.100');

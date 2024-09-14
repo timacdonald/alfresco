@@ -70,7 +70,7 @@ $config = $container->make(Configuration::class)->merge([
     'generation' => ! $options->get('--no-generation'),
     'index' => ! $options->get('--no-index'),
     'output_ansi' => ! $options->get('--no-ansi'),
-    'debug' => $options->has('--debug'),
+    'debug' => $options->get('--debug'),
 ]);
 
 $output = $container->make(Output::class);
