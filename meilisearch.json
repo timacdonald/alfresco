@@ -1,24 +1,25 @@
 {
-  "allowed_domains": "127.0.0.1",
   "index_uid": "docs",
   "start_urls": ["http://127.0.0.1:8080/"],
+  "sitemap_urls": [],
   "stop_urls": [],
+  "allowed_domains": ["127.0.0.1"],
   "selectors": {
     "lvl0": {
-      "selector": ".docs-lvl0",
+      "selector": "main + nav > ul > details[open] summary",
       "global": true,
       "default_value": "Documentation"
     },
     "lvl1": {
-      "selector": ".docs-lvl1",
+      "selector": "main + nav > ul > details[open] details[open] summary",
       "global": true,
-      "default_value": "Chapter"
+      "default_value": "Sub-chapter"
     },
-    "lvl2": ".docs-content .docs-lvl2",
-    "lvl3": ".docs-content .docs-lvl3",
-    "lvl4": ".docs-content .docs-lvl4",
-    "lvl5": ".docs-content .docs-lvl5",
-    "lvl6": ".docs-content .docs-lvl6",
-    "text": ".docs-content p, .docs-content li"
+    "lvl2": "main h1",
+    "lvl3": "main h2",
+    "lvl4": "main h3",
+    "lvl5": "main h4",
+    "lvl6": "main h5",
+    "text": "main"
   }
 }

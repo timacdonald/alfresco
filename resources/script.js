@@ -1,3 +1,13 @@
+import { docsearch } from "meilisearch-docsearch";
+import "meilisearch-docsearch/css";
+
+docsearch({
+  container: "#docsearch",
+  host: import.meta.env.VITE_MEILISEARCH_HOST_URL,
+  apiKey: import.meta.env.VITE_MEILISEARCH_API_KEY,
+  indexUid: "docs",
+})
+
 const prefetched = new Set
 
 const prefetch = href => {
