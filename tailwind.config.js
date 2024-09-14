@@ -1,10 +1,14 @@
+import defaultTheme from 'tailwindcss/defaultTheme'
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./build/**/*.{php,html,js}"],
+  content: [
+    "./build/output/*.html",
+  ],
   theme: {
     extend: {
-        colors: {
-
+        fontFamily: {
+            mono: ['"Roboto Mono"', ...defaultTheme.fontFamily.mono],
         }
     },
   },

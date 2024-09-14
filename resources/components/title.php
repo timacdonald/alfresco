@@ -15,7 +15,7 @@ return fn (
     attributes: [
         'id' => $link->destinationWithoutFragmentHash(),
         'class' => [
-            'font-extrabold text-violet-950 leading-tight tracking-tight',
+            'font-extrabold text-violet-800 leading-tight tracking-tight',
             match ($level) {
                 // Due to line-height the first heading on a page doesn't have
                 // consistent spacing on top and sides. We will just "pull" it

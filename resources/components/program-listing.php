@@ -7,7 +7,7 @@ return fn (
 ) => $render->tag(
     as: 'div',
     attributes: [
-        'class' => 'border border-violet-100 bg-violet-50/50 -mx-6 px-6 py-5 leading-9 rounded my-6 first:mt-0 last:mb-0 relative',
+        'class' => 'border border-violet-100 bg-violet-50/50 -mx-6 px-6 py-5 leading-7 rounded my-6 first:mt-0 last:mb-0 relative',
     ],
     before: <<< 'SVG'
             <button class="rounded inline-flex items-center justify-center border border-violet-300 bg-violet-50 h-6 w-6 text-violet-400 hover:text-violet-950 hover:border-violet-900 font-semibold absolute -right-2 -top-2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">

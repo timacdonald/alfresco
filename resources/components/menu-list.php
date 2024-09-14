@@ -14,14 +14,14 @@ return fn (
     ? ($empty->contains(fn (Title $empty) => $title->is($empty)) ? '' : $render->tag(
         as: 'li',
         attributes: [
-            'class' => 'pl-4 py-1',
+            'class' => 'pl-4 py-1.5',
         ],
         before: $render->tag(
             as: 'a',
             attributes: [
                 'class' => [
                     'hover:underline text-sm relative flex items-center',
-                    $title->is($active) ? 'underline text-violet-700 font-bold' : 'text-violet-950',
+                    $title->is($active) ? 'xunderline text-violet-700 font-bold' : 'text-violet-950',
                 ],
                 'href' => "{$title->id}.html",
             ],
@@ -37,7 +37,7 @@ return fn (
         before: $render->tag(
             as: 'summary',
             attributes: [
-                'class' => 'cursor-pointer py-1 list-outside marker:text-violet-400 text-violet-950 text-sm',
+                'class' => 'cursor-pointer py-1.5 list-outside marker:text-violet-300 text-violet-950 text-sm',
             ],
             before: $title->html,
         ),
@@ -46,14 +46,14 @@ return fn (
             : $render->tag(
                 as: 'li',
                 attributes: [
-                    'class' => 'pl-4 py-1',
+                    'class' => 'pl-4 py-1.5',
                 ],
                 before: $render->tag(
                     as: 'a',
                     attributes: [
                         'class' => [
                             'hover:underline text-sm relative flex items-center',
-                            $title->is($active) ? 'underline text-violet-700 font-bold' : 'text-violet-950',
+                            $title->is($active) ? 'xunderline text-violet-700 font-bold' : 'text-violet-950',
                         ],
                         'href' => "{$title->id}.html",
                     ],

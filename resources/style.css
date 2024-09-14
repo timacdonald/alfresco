@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#docsearch .docsearch-btn {
+    color: theme('colors.violet.400');
+    height: 33px;
+    background: theme('colors.violet.50/50');
+    border: 1px solid theme('colors.violet.100');
+}
+
+#docsearch .docsearch-modal-btn-icon {
+    height: 20px;
+    width: 20px;
+}
+
+#docsearch .docsearch-btn-keys {
+    align-items: center;
+    content: '/'
+}
+
+#docsearch .docsearch-btn-keys::after {
+    display: block;
+    height: 100%;
+    content: "/";
+}
+
+#docsearch .docsearch-btn-key {
+    display: none;
+}

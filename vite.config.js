@@ -4,7 +4,7 @@ export default {
         outDir: "build/output",
         emptyOutDir: false,
         rollupOptions: {
-            input: ["resources/script.js"],
+            input: ["resources/script.js", "resources/style.css"],
             output: {
                 assetFileNames: "[name][extname]",
                 entryFileNames: "[name].js",

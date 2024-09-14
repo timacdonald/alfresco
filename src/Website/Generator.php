@@ -173,6 +173,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'phpdoc' => $this->renderPhpDoc($node),
             'preface' => $this->renderPreface($node),
             'procedure' => $this->renderProcedure($node),
+            'methodname' => $this->renderMethodName($node),
+            'modifier' => $this->renderModifier($node),
             'productname' => $this->renderProductName($node),
             'programlisting' => $this->renderProgramListing($node),
             'pubdate' => $this->renderPubDate($node),
@@ -995,6 +997,29 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderProcedure(Node $node): Slotable|string
     {
         return $this->render->component('ordered-list');
+    }
+
+    /**
+     * The name of a method.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/methodname.html
+     */
+    protected function renderMethodName(Node $node): Slotable|string
+    {
+        // TODO this should show function API on hover.
+        // TODO this should link to the method
+        return $this->render->component('inline-code');
+    }
+
+    /**
+     * Modifiers in a synopsis.
+     *
+     * @see https://tdg.docbook.org/tdg/5.2/modifier.html
+     */
+    protected function renderModifier(Node $node): Slotable|string
+    {
+        // TODO
+        return $this->render->component('inline-code');
     }
 
     /**

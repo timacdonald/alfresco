@@ -7,7 +7,7 @@ return fn (
 ) => $render->tag(
     as: 'div',
     attributes: [
-        'class' => 'border border-violet-100 bg-violet-50/50 -mx-6 px-6 py-5 leading-9 rounded my-6 first:mt-0 last:mb-0 relative ',
+        'class' => 'border border-violet-100 bg-violet-50/50 -mx-6 px-6 py-5 leading-7 rounded my-6 first:mt-0 last:mb-0 relative ',
     ],
     slot: $render->tag(
         as: 'pre',

@@ -13,7 +13,7 @@ return fn (
 ) => $render->tag(
     as: 'nav',
     attributes: [
-        'class' => 'order-first py-12 pl-12 pr-6 max-w-[300px] bg-violet-50/50 border-r border-violet-100',
+        'class' => 'order-first py-4 pl-10 pr-6 w-[300px] bg-violet-50/50 border-r border-violet-100',
     ],
     before: $render->tag(
         as: 'ul',
