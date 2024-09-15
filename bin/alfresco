@@ -75,10 +75,6 @@ $output->line('🍃 <🌈>Alfresco</🌈>');
 
 /*
  * Resolve generators and their indexes.
- *
- * Next, we resolve the configured generators. Generators may specify the
- * indexes they are dependent on. We also resolve the indexes, as we need to
- * process them first.
  */
 
 [$generators, $indexes] = $options('--generator')
@@ -93,31 +89,26 @@ $output->line('🍃 <🌈>Alfresco</🌈>');
     ]);
 
 /*
- * Resolve the manual and process.
- *
- * The manual represents the documentation file and allows us to easily iterate
- * over the XML contents. The process is a function that iterates over the manual
- * with the given generators / indexes to produce the desired output.
+ * Resolve the manual factory and process instance.
  */
 
-$manual = $container->make(ManualFactory::class)->make($option('--manual'));
+$factory = $container->make(ManualFactory::class);
 $process = $container->make(Process::class);
 
 /*
  * Run indexes.
  *
  * The indexes perform an initial loop over the documentation to perform any
- * useful read-ahead actions. When reading large XML files we are unable to
- * "look ahead".  Doing an initial iteration allows us to collect useful
- * information for generators which allows them to, kind, "look ahead".
+ * useful read-ahead actions. This information can then be used by their
+ * generators to make decisons based on data it has not yet seen.
  */
 
-if ($option('no-index')) {
+if ($option('--no-index')) {
     $output->line('<yellow>Skipping indexing.</yellow>');
 } else {
     $output->line('<blue>Indexing.</blue>');
 
-    $duration = measure(fn () => $process($manual, $indexes, function ($node, int $i) use ($option, $output) {
+    $duration = measure(fn () => $process($factory->make($option('--manual')), $indexes, function ($node, int $i) use ($option, $output) {
         if ($option('--debug')) {
             $output->write('<dim>Hit ENTER to process node: </dim>');
             $output->write("<{$node->name}");
@@ -135,16 +126,6 @@ if ($option('no-index')) {
 }
 
 /*
- * Resolve another instance of the manul.
- *
- * As the manual iterates over XML, it internally handles a "cursor". After
- * running the indexes the cursor has reached the end of the document. Instead
- * of "rewinding" the cursor, we will just resolve a new manual instance.
- */
-
-$manual = $container->make(Manual::class);
-
-/*
  * Run generators.
  *
  * This is where the magic happens 💫. We will now process the generators to
@@ -156,7 +137,7 @@ if ($option('--no-generation')) {
 } else {
     $output->line('<blue>Generating.</blue>');
 
-    $duration = measure(fn () => $process($manual, $generators, function ($node, int $i) use ($option, $output) {
+    $duration = measure(fn () => $process($factory->make($option('--manual')), $generators, function ($node, int $i) use ($option, $output) {
         if ($option('--debug')) {
             $output->write("<{$node->name}");
             // $output(' id="'.$node->hasId() ? $node->id() : ''.'"');
