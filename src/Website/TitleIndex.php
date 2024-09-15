@@ -15,11 +15,19 @@ use RuntimeException;
 
 class TitleIndex implements Generator
 {
+    /**
+     * Modifier to adjust the heading level.
+     */
     protected int $levelModifier = 0;
 
+    /**
+     * The output stream.
+     */
     protected Stream $stream;
 
     /**
+     * The cache of all titles.
+     *
      * @var Collection<string, Title>
      */
     protected ?Collection $allCache;
