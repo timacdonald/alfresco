@@ -2,11 +2,9 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\AbstractComponentFactory;
 use Alfresco\CodeReplacer;
 use Alfresco\ComponentFactory;
 use Alfresco\Configuration;
-use Alfresco\Container;
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Contracts\Generator as GeneratorContract;
 use Alfresco\Contracts\Slotable;
