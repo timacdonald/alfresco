@@ -6,7 +6,10 @@ use RuntimeException;
 
 class Translation
 {
-    protected array $values = [];
+    /**
+     * @var array<string, array<string, string>>
+     */
+    protected array $valuesCache = [];
 
     public function __construct(
         protected Configuration $config,
@@ -16,15 +19,20 @@ class Translation
 
     public function get(string $key): string
     {
-        if (! array_key_exists($key, $this->values())) {
+        $values = $this->values();
+
+        if (! array_key_exists($key, $values)) {
             throw new RuntimeException("Unknown translation key [{$key}] for language [{$this->config->get('language')}].");
         }
 
-        return $this->values()[$key];
+        return $values[$key];
     }
 
-    protected function values()
+    /**
+     * @return array<string, string>
+     */
+    protected function values(): array
     {
-        return $this->values[$this->config->get('language')] ??= (require_once $this->config->get('translation_directory')."/{$this->config->get('language')}.php");
+        return $this->valuesCache[$this->config->get('language')] ??= (require_once $this->config->get('translation_directory')."/{$this->config->get('language')}.php");
     }
 }

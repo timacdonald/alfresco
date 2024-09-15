@@ -2,15 +2,15 @@
 <?php
 
 use Alfresco\Configuration;
-use Alfresco\Container;
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Manual;
 use Alfresco\ManualFactory;
 use Alfresco\Output;
 use Alfresco\Process;
+use Illuminate\Container\Container;
+use Illuminate\Support\Benchmark;
 use Illuminate\Support\Collection;
 
-use function Alfresco\measure;
 use function Safe\file_get_contents;
 
 /*
@@ -83,9 +83,7 @@ $output->line('🍃 <🌈>Alfresco</🌈>');
     ->pipe(fn ($generators) => [
         $generators,
         $generators->whereInstanceOf(DependsOnIndexes::class)
-            ->flatMap(fn ($generator) => $generator->indexes())
-            ->unique()
-            ->map(fn ($class) => $container->make($class)),
+            ->flatMap(fn ($generator) => $generator->indexes()),
     ]);
 
 /*
@@ -94,6 +92,7 @@ $output->line('🍃 <🌈>Alfresco</🌈>');
 
 $factory = $container->make(ManualFactory::class);
 $process = $container->make(Process::class);
+$measure = fn ($callback) => round(Benchmark::measure($callback) / 1000, 2);
 
 /*
  * Run indexes.
@@ -108,7 +107,7 @@ if ($option('--no-index')) {
 } else {
     $output->line('<blue>Indexing.</blue>');
 
-    $duration = measure(fn () => $process($factory->make($option('--manual')), $indexes, function ($node, int $i) use ($option, $output) {
+    $duration = $measure(fn () => $process->handle($factory->make($option('--manual')), $indexes, function ($node, int $i) use ($option, $output) {
         if ($option('--debug')) {
             $output->write('<dim>Hit ENTER to process node: </dim>');
             $output->write("<{$node->name}");
@@ -137,7 +136,7 @@ if ($option('--no-generation')) {
 } else {
     $output->line('<blue>Generating.</blue>');
 
-    $duration = measure(fn () => $process($factory->make($option('--manual')), $generators, function ($node, int $i) use ($option, $output) {
+    $duration = $measure(fn () => $process->handle($factory->make($option('--manual')), $generators, function ($node, int $i) use ($option, $output) {
         if ($option('--debug')) {
             $output->write("<{$node->name}");
             // $output(' id="'.$node->hasId() ? $node->id() : ''.'"');

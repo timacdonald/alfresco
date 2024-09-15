@@ -15,9 +15,14 @@ use RuntimeException;
 
 class TitleIndex implements Generator
 {
-    protected ?Stream $stream;
-
     protected int $levelModifier = 0;
+
+    protected Stream $stream;
+
+    /**
+     * @var Collection<string, Title>
+     */
+    protected ?Collection $allCache;
 
     /**
      * Create a new instance.
@@ -27,7 +32,10 @@ class TitleIndex implements Generator
         protected ComponentFactory $render,
         protected Configuration $config,
     ) {
-        //
+        $this->stream = $this->streamFactory->make(
+            "{$this->config->get('index_directory')}/website/{$this->config->get('language')}/titles.php",
+            1000,
+        );
     }
 
     /**
@@ -35,7 +43,7 @@ class TitleIndex implements Generator
      */
     public function setUp(): void
     {
-        $this->streamInstance()->write(<<< 'PHP'
+        $this->stream->write(<<< 'PHP'
             <?php
 
             use Alfresco\Website\Title;
@@ -51,7 +59,7 @@ class TitleIndex implements Generator
      */
     public function stream(Node $node): Stream
     {
-        return $this->streamInstance();
+        return $this->stream;
     }
 
     /**
@@ -102,13 +110,11 @@ class TitleIndex implements Generator
      */
     public function tearDown(): void
     {
-        $this->streamInstance()->write("];\n");
+        $this->stream->write("];\n");
     }
 
     /**
      * Render a title node.
-     *
-     * @param  array{ 0: string, 1: int }  $info
      */
     protected function renderTitle(Node $section, int $level): Slotable
     {
@@ -174,13 +180,11 @@ class TitleIndex implements Generator
      */
     public function all(): Collection
     {
-        return collect(require_once $this->streamInstance()->path);
+        return $this->allCache ??= collect(require_once $this->stream->path);
     }
 
     /**
      * Find the title based on it's ID.
-     *
-     * @return Collection<string, Title>
      */
     public function find(string $id): Title
     {
@@ -228,13 +232,5 @@ class TitleIndex implements Generator
 
                 return $result;
             }, collect([]));
-    }
-
-    protected function streamInstance()
-    {
-        return $this->stream ??= $this->streamFactory->make(
-            "{$this->config->get('index_directory')}/website/{$this->config->get('language')}/titles.php",
-            1000,
-        );
     }
 }

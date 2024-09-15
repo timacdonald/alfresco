@@ -26,15 +26,8 @@ use function Safe\system;
 
 class Generator implements DependsOnIndexes, GeneratorContract
 {
-    protected array $indexes = [
-        TitleIndex::class,
-        EmptyChunkIndex::class,
-    ];
-
     /**
      * Create a new instance.
-     *
-     * @param  array{ Alfresco\Website\TitleIndex: TitleIndex, Alfresco\Website\EmptyChunkIndex: EmptyChunkIndex }  $indexes
      */
     public function __construct(
         protected Configuration $config,
@@ -43,6 +36,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
         protected ComponentFactory $render,
         protected Highlighter $highlighter,
         protected CodeReplacer $replace,
+        protected TitleIndex $titleIndex,
+        protected EmptyChunkIndex $emptyChunkIndex,
     ) {
         //
     }
@@ -68,10 +63,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
                     ->write(...),
                 fn () => $stream->write($this->render->component('main')->after())
                     ->write($this->render->component('menu', [
-                        'active' => $this->indexes[TitleIndex::class]->find($node->id()),
-                        'items' => $this->indexes[TitleIndex::class]->heirachy(),
-                        'empty' => $this->indexes[TitleIndex::class]->findMany(
-                            $this->indexes[EmptyChunkIndex::class]->ids()
+                        'active' => $this->titleIndex->find($node->id()),
+                        'items' => $this->titleIndex->heirachy(),
+                        'empty' => $this->titleIndex->findMany(
+                            $this->emptyChunkIndex->ids()
                         ),
                     ])->toString())
                     ->write(file_get_contents('resources/footer.html'))
@@ -213,7 +208,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     public function indexes(): array
     {
-        return $this->indexes;
+        return [
+            $this->titleIndex,
+            $this->emptyChunkIndex,
+        ];
     }
 
     /**
@@ -1309,7 +1307,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
          * the main page chunked titles.
          */
 
-        [$section] = $this->indexes[TitleIndex::class]->info($node);
+        [$section] = $this->titleIndex->info($node);
 
         if ($section !== null) {
             return $this->render->component('title', [

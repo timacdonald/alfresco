@@ -29,7 +29,7 @@ class Process
      *
      * @param  iterable<Generator>  $generators
      */
-    public function __invoke(Manual $manual, iterable $generators, ?Closure $onTick = null): void
+    public function handle(Manual $manual, iterable $generators, ?Closure $onTick = null): void
     {
         $this->streams = new SplObjectStorage;
 
