@@ -9,11 +9,18 @@ use function Safe\file_get_contents;
 
 class CodeReplacer
 {
-    public function __construct(protected Configuration $config)
-    {
+    /**
+     * Create a new instance.
+     */
+    public function __construct(
+        protected Configuration $config,
+    ) {
         //
     }
 
+    /**
+     * Make replacements for the given code snippet.
+     */
     public function replace(string $original): string
     {
         // TODO make this look for a .replacement.php or something better.

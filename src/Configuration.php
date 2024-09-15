@@ -7,6 +7,8 @@ use RuntimeException;
 class Configuration
 {
     /**
+     * Create a new instance.
+     *
      * @param  array<string, mixed>  $config
      */
     public function __construct(public array $config)

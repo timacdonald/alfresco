@@ -8,6 +8,9 @@ use Stringable;
 
 class Wrapper implements Slotable
 {
+    /**
+     * Create a new instance.
+     */
     public function __construct(
         protected string|Stringable $before = '',
         protected string|Stringable $after = '',

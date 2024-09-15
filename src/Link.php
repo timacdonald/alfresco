@@ -21,6 +21,9 @@ class Link
         return new Link('#'.Str::slug(strip_tags($destination)), true);
     }
 
+    /**
+     * Create a new instance.
+     */
     public function __construct(
         public string $destination,
         public bool $isInternal,

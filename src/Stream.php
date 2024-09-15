@@ -13,6 +13,9 @@ class Stream
 
     protected ?Closure $close;
 
+    /**
+     * Create a new instance.
+     */
     public function __construct(
         public string $path,
         protected Closure $open,

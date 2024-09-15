@@ -24,8 +24,12 @@ class Manual
 
     protected int $lastDepth = -1;
 
-    public function __construct(protected XMLReader $xml)
-    {
+    /**
+     * Create a new instance.
+     */
+    public function __construct(
+        protected XMLReader $xml,
+    ) {
         //
     }
 

@@ -4,24 +4,35 @@ namespace Alfresco;
 
 use Alfresco\Contracts\Slotable;
 use Closure;
+use Illuminate\Container\Container;
 use Illuminate\Support\Collection;
 use ReflectionFunction;
 use ReflectionParameter;
-use RuntimeException;
 use Stringable;
 
 class ComponentFactory
 {
+    /**
+     * The component resolver cache.
+     *
+     * @var array<string, \Closure>
+     */
     protected array $resolverCache = [];
 
+    /**
+     * Create a new instance.
+     */
     public function __construct(
         protected Configuration $config,
-        protected Translation $translation
+        protected Translation $translation,
+        protected Container $container,
     ) {
         //
     }
 
     /**
+     * Render a HTML tag.
+     *
      * @param  array<string, string|bool|array<int, string>>  $attributes
      */
     public function tag(
@@ -34,6 +45,9 @@ class ComponentFactory
         return new HtmlTag($as, $attributes, $before, $after, $slot);
     }
 
+    /**
+     * Render inline text.
+     */
     public function inlineText(string $before = '', string $after = ''): Wrapper
     {
         return $this->wrapper(
@@ -48,6 +62,8 @@ class ComponentFactory
     }
 
     /**
+     * Render a component.
+     *
      * @param  array<string, mixed>  $data
      */
     public function component(string $path, array $data = []): Slotable
@@ -64,20 +80,7 @@ class ComponentFactory
      */
     protected function resolve(string $path, array $data): Slotable|string
     {
-        return with($this->resolver($path), fn (Closure $resolver) => $resolver(
-            ...collect($data)
-                ->merge($this->defaultArguments())
-                ->only($this->parametersFor($resolver)->map->name)
-                ->pipe(function (Collection $arguments) use ($path, $resolver) {
-                    if ($this->requiredParameters($resolver)->map->name->diff($arguments->keys())->isEmpty()) {
-                        return $arguments;
-                    }
-
-                    throw new RuntimeException(
-                        "Missing required argument(s) [{$this->requiredParameters($resolver)->map->name->diff($arguments->keys())->implode(', ')}] for component [{$path}]."
-                    );
-                })
-        ));
+        return $this->container->call($this->resolver($path), $data);
     }
 
     /**
@@ -99,16 +102,5 @@ class ComponentFactory
     protected function resolver(string $path): Closure
     {
         return $this->resolverCache[$path] ??= (static fn (string $__path) => require_once $__path)("{$this->config->get('component_directory')}/{$path}.php");
-    }
-
-    /**
-     * @return array{ render: ComponentFactory, translate: (Closure(string): string) }
-     */
-    protected function defaultArguments(): array
-    {
-        return [
-            'render' => $this,
-            'translate' => $this->translation->get(...),
-        ];
     }
 }

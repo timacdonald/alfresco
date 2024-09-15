@@ -7,8 +7,12 @@ use Stringable;
 
 class HtmlString implements Slotable
 {
-    public function __construct(protected string|Stringable $content)
-    {
+    /**
+     * Create a new instance.
+     */
+    public function __construct(
+        protected string|Stringable $content,
+    ) {
         //
     }
 

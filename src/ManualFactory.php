@@ -7,8 +7,12 @@ use XMLReader;
 
 class ManualFactory
 {
-    public function __construct(protected Configuration $config)
-    {
+    /**
+     * Create a new instance.
+     */
+    public function __construct(
+        protected Configuration $config,
+    ) {
         //
     }
 

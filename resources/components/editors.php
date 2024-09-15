@@ -4,8 +4,8 @@ namespace Alfresco;
 
 return fn (
     ComponentFactory $render,
-    callable $translate,
+    Translation $translation,
 ) => $render->wrapper(
-    before: $render->inlineText($translate('editors.by')),
+    before: $render->inlineText($translation->get('editors.by')),
     after: '.'
 );

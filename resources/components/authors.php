@@ -4,14 +4,14 @@ namespace Alfresco;
 
 return fn (
     ComponentFactory $render,
-    callable $translate,
+    Translation $translation,
 ) => $render->wrapper(
     before: $render->tag(
         as: 'p',
         attributes: [
             'class' => 'my-6 first:mt-0 last:mb-0',
         ],
-        before: $translate('authors.by').':',
+        before: $translation->get('authors.by').':',
     ),
     slot: $render->component('unordered-list'),
     after: $render->tag(

@@ -11,6 +11,8 @@ class Node
     protected ?string $innerContentCache;
 
     /**
+     * Create a new instance.
+     *
      * @param  array<string, array<string, string>>  $attributes
      */
     public function __construct(

@@ -9,6 +9,8 @@ use Stringable;
 class HtmlTag implements Slotable
 {
     /**
+     * Create a new instance.
+     *
      * @param  array<string, string|bool|array<int, string>>  $attributes
      */
     public function __construct(

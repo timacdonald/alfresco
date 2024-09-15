@@ -11,6 +11,9 @@ class Translation
      */
     protected array $valuesCache = [];
 
+    /**
+     * Create a new instance.
+     */
     public function __construct(
         protected Configuration $config,
     ) {

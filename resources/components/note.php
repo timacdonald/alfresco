@@ -4,7 +4,7 @@ namespace Alfresco;
 
 return fn (
     ComponentFactory $render,
-    callable $translate,
+    Translation $translation,
 ) => $render->tag(
     as: 'div',
     attributes: [
@@ -13,7 +13,7 @@ return fn (
     ],
     before: $render->tag(
         as: 'strong',
-        before: $translate('note.badge'),
+        before: $translation->get('note.badge'),
         attributes: [
             'class' => 'absolute inline-block right-3 -top-3 rounded bg-blue-200 leading-none py-1 px-2 text-sm font-semibold',
         ],

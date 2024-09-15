@@ -9,8 +9,12 @@ use function Safe\file_put_contents;
 
 class Highlighter
 {
-    public function __construct(protected Shiki $shiki)
-    {
+    /**
+     * Create a new instance.
+     */
+    public function __construct(
+        protected Shiki $shiki
+    ) {
         //
     }
 
