@@ -6,22 +6,25 @@ use RuntimeException;
 
 class Translation
 {
-    /**
-     * @param  array<string, string>  $values
-     */
+    protected array $values = [];
+
     public function __construct(
-        protected string $language,
-        protected array $values,
+        protected Configuration $config,
     ) {
         //
     }
 
     public function get(string $key): string
     {
-        if (! array_key_exists($key, $this->values)) {
-            throw new RuntimeException("Unknown translation key [{$key}] for language [{$this->language}].");
+        if (! array_key_exists($key, $this->values())) {
+            throw new RuntimeException("Unknown translation key [{$key}] for language [{$this->config->get('language')}].");
         }
 
-        return $this->values[$key];
+        return $this->values()[$key];
+    }
+
+    protected function values()
+    {
+        return $this->values[$this->config->get('language')] ??= (require_once $this->config->get('translation_directory')."/{$this->config->get('language')}.php");
     }
 }

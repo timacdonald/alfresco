@@ -3,7 +3,6 @@
 namespace Alfresco\Website;
 
 use Alfresco\Configuration;
-use Alfresco\Container;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\FileStreamFactory;
@@ -13,6 +12,8 @@ use Illuminate\Support\Collection;
 
 class EmptyChunkIndex implements Generator
 {
+    protected ?Stream $stream;
+
     /**
      * Indicates that the current chunk is empty.
      */
@@ -24,26 +25,11 @@ class EmptyChunkIndex implements Generator
     protected ?Node $chunk = null;
 
     /**
-     * Resolve from the container.
-     */
-    public static function resolve(Container $container, string $language): EmptyChunkIndex
-    {
-        $config = $container->make(Configuration::class);
-
-        $streamFactory = $container->make(FileStreamFactory::class);
-
-        $path = "{$config->get('index_directory')}/website/{$language}/empty_pages.php";
-
-        return new EmptyChunkIndex(
-            stream: $streamFactory->make($path, 1000),
-        );
-    }
-
-    /**
      * Create a new instance.
      */
     public function __construct(
-        protected Stream $stream
+        protected FileStreamFactory $streamFactory,
+        protected Configuration $config
     ) {
         //
     }
@@ -53,7 +39,7 @@ class EmptyChunkIndex implements Generator
      */
     public function setUp(): void
     {
-        $this->stream->write(<<< 'PHP'
+        $this->streamInstance()->write(<<< 'PHP'
             <?php
 
             return [
@@ -66,7 +52,7 @@ class EmptyChunkIndex implements Generator
      */
     public function stream(Node $node): Stream
     {
-        return $this->stream;
+        return $this->streamInstance();
     }
 
     /**
@@ -105,7 +91,7 @@ class EmptyChunkIndex implements Generator
      */
     public function tearDown(): void
     {
-        $this->stream->write('];');
+        $this->streamInstance()->write('];');
     }
 
     /**
@@ -115,7 +101,7 @@ class EmptyChunkIndex implements Generator
      */
     public function ids(): Collection
     {
-        return collect(require $this->stream->path);
+        return collect(require_once $this->streamInstance()->path);
     }
 
     /**
@@ -126,5 +112,13 @@ class EmptyChunkIndex implements Generator
         return $this->isEmpty
             ? $this->chunk
             : null;
+    }
+
+    protected function streamInstance()
+    {
+        return $this->stream ??= $this->streamFactory->make(
+            "{$this->config->get('index_directory')}/website/{$this->config->get('language')}/empty_pages.php",
+            1000,
+        );
     }
 }

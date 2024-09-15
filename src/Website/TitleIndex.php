@@ -2,10 +2,8 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\AbstractComponentFactory;
 use Alfresco\ComponentFactory;
 use Alfresco\Configuration;
-use Alfresco\Container;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\FileStreamFactory;
@@ -17,24 +15,7 @@ use RuntimeException;
 
 class TitleIndex implements Generator
 {
-    /**
-     * Resolve from the container.
-     */
-    public static function resolve(Container $container, string $language): Generator
-    {
-        $config = $container->make(Configuration::class);
-
-        $streamFactory = $container->make(FileStreamFactory::class);
-
-        $abstractComponentFactory = $container->make(AbstractComponentFactory::class);
-
-        $path = "{$config->get('index_directory')}/website/{$language}/titles.php";
-
-        return new TitleIndex(
-            stream: $streamFactory->make($path, 1000),
-            render: $abstractComponentFactory->make($language),
-        );
-    }
+    protected ?Stream $stream;
 
     protected int $levelModifier = 0;
 
@@ -42,8 +23,9 @@ class TitleIndex implements Generator
      * Create a new instance.
      */
     public function __construct(
-        protected Stream $stream,
+        protected FileStreamFactory $streamFactory,
         protected ComponentFactory $render,
+        protected Configuration $config,
     ) {
         //
     }
@@ -53,7 +35,7 @@ class TitleIndex implements Generator
      */
     public function setUp(): void
     {
-        $this->stream->write(<<< 'PHP'
+        $this->streamInstance()->write(<<< 'PHP'
             <?php
 
             use Alfresco\Website\Title;
@@ -69,7 +51,7 @@ class TitleIndex implements Generator
      */
     public function stream(Node $node): Stream
     {
-        return $this->stream;
+        return $this->streamInstance();
     }
 
     /**
@@ -120,7 +102,7 @@ class TitleIndex implements Generator
      */
     public function tearDown(): void
     {
-        $this->stream->write("];\n");
+        $this->streamInstance()->write("];\n");
     }
 
     /**
@@ -192,7 +174,7 @@ class TitleIndex implements Generator
      */
     public function all(): Collection
     {
-        return collect(require $this->stream->path);
+        return collect(require_once $this->streamInstance()->path);
     }
 
     /**
@@ -246,5 +228,13 @@ class TitleIndex implements Generator
 
                 return $result;
             }, collect([]));
+    }
+
+    protected function streamInstance()
+    {
+        return $this->stream ??= $this->streamFactory->make(
+            "{$this->config->get('index_directory')}/website/{$this->config->get('language')}/titles.php",
+            1000,
+        );
     }
 }

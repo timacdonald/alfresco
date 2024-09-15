@@ -8,7 +8,8 @@
         }
     ],
     "require": {
-        "php": "8.2.*",
+        "php": "8.3.*",
+        "illuminate/container": "^10.48",
         "illuminate/support": "^10.6",
         "spatie/once": "^3.1",
         "spatie/shiki-php": "^1.3",

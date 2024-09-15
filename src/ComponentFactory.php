@@ -12,10 +12,12 @@ use Stringable;
 
 class ComponentFactory
 {
-    private array $resolverCache = [];
+    protected array $resolverCache = [];
 
-    public function __construct(protected string $path, protected Translation $translation)
-    {
+    public function __construct(
+        protected Configuration $config,
+        protected Translation $translation
+    ) {
         //
     }
 
@@ -96,7 +98,7 @@ class ComponentFactory
 
     protected function resolver(string $path): Closure
     {
-        return $this->resolverCache[$path] ??= (static fn (string $__path) => require $__path)("{$this->path}/{$path}.php");
+        return $this->resolverCache[$path] ??= (static fn (string $__path) => require_once $__path)("{$this->config->get('component_directory')}/{$path}.php");
     }
 
     /**

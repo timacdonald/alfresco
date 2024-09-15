@@ -28,31 +28,10 @@ use function Safe\system;
 
 class Generator implements DependsOnIndexes, GeneratorContract
 {
-    /**
-     * Resolve from the container.
-     */
-    public static function resolve(Container $container, string $language): Generator
-    {
-        $config = $container->make(Configuration::class);
-
-        $abstractComponentFactory = $container->make(AbstractComponentFactory::class);
-
-        return new Generator(
-            buildDirectory: $config->get('build_directory'),
-            debug: $config->get('debug'),
-            indexes: [
-                TitleIndex::class => $container->make(TitleIndex::class, [$language]),
-                EmptyChunkIndex::class => $container->make(EmptyChunkIndex::class, [$language]),
-            ],
-            streamFactory: $container->make(FileStreamFactory::class),
-            output: $container->make(Output::class),
-            render: $abstractComponentFactory->make($language),
-            highlighter: $container->make(Highlighter::class),
-            replace: $container->make(CodeReplacer::class, [
-                $config->get('resource_directory').'/replacements',
-            ]),
-        );
-    }
+    protected array $indexes = [
+        TitleIndex::class,
+        EmptyChunkIndex::class,
+    ];
 
     /**
      * Create a new instance.
@@ -60,9 +39,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      * @param  array{ Alfresco\Website\TitleIndex: TitleIndex, Alfresco\Website\EmptyChunkIndex: EmptyChunkIndex }  $indexes
      */
     public function __construct(
-        protected string $buildDirectory,
-        protected bool $debug,
-        protected array $indexes,
+        protected Configuration $config,
         protected FileStreamFactory $streamFactory,
         protected Output $output,
         protected ComponentFactory $render,
@@ -86,7 +63,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     public function stream(Node $node): Stream
     {
         return new Stream(
-            "{$this->buildDirectory}/{$node->id()}.html",
+            "{$this->config->get('build_directory')}/{$node->id()}.html",
             fn (string $path) => with($this->streamFactory->make($path, 1000), fn (Stream $stream) => [
                 $stream->write(file_get_contents('resources/header.html'))
                     ->write($this->render->component('main')->before())
@@ -210,7 +187,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'xref' => $this->renderXref($node),
             'year' => $this->renderYear($node),
             default => tap('', fn () => dump('Unknown node', $node->name, $node->parents())),
-        }, fn (string|Slotable $content) => $this->debug
+        }, fn (string|Slotable $content) => $this->config->get('debug')
             ? $this->withDebuggingInfo($node, $content)
             : $content);
     }
@@ -238,7 +215,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     public function indexes(): array
     {
-        return array_values($this->indexes);
+        return $this->indexes;
     }
 
     /**

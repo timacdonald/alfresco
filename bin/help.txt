@@ -20,10 +20,6 @@ A fresh take on the PHP documentation website generation.
         Do not run the generator's indexes. Can be useful if wanting to re-generate but the indexes are not stale.
         <dim>Usage: <bold>alfresco --no-index</bold></dim>
 
-    <green><bold>--no-ansi</bold></green>
-        Turn off colors.
-        <dim>Usage: <bold>alfresco --no-ansi</bold></dim>
-
     <green><bold>--debug</bold></green>
         Turn on debug generator output.
         <dim>Usage: <bold>alfresco --debug</bold></dim>

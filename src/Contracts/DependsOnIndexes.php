@@ -7,7 +7,7 @@ interface DependsOnIndexes
     /**
      * Retrieve the generator's indexes.
      *
-     * @return array<int, Generator>
+     * @return array<int, class-string<Generator>>
      */
     public function indexes(): array;
 }

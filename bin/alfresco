@@ -5,80 +5,71 @@ use Alfresco\Configuration;
 use Alfresco\Container;
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Manual;
-use Alfresco\Node;
+use Alfresco\ManualFactory;
 use Alfresco\Output;
 use Alfresco\Process;
-use Alfresco\Website\Generator as Website;
 use Illuminate\Support\Collection;
 
 use function Alfresco\measure;
 use function Safe\file_get_contents;
 
-require __DIR__.'/../vendor/autoload.php';
-error_reporting(E_ALL);
-
-/*
- * Resolve CLI options.
- *
- * Collect the user's CLI input, parse it, and set some defaults.
- */
-
-[$input, $options, $generators] = collect($argv)
-    ->skip(1)
-    ->pipe(fn (Collection $input) => [
-        $input,
-        $input->filter(fn (string $value) => str_starts_with($value, '-'))
-            ->map(fn (string $option) => explode('=', $option))
-            ->mapWithKeys(fn (array $bits) => [$bits[0] => $bits[1] ?? true])
-            ->tap(function (Collection $options) {
-                if ($options->has('--help')) {
-                    return;
-                }
-
-                if (! $options->has('--manual')) {
-                    echo "The [{$option}] argument is required.";
-                    exit(1);
-                }
-            })
-            ->pipe(fn (Collection $options) => collect([
-                '--no-generation' => false,
-                '--no-index' => false,
-                '--no-ansi' => false,
-                '--debug' => false,
-            ])->merge($options)),
-        $input->reject(fn (string $value) => str_starts_with($value, '-'))
-            ->whenEmpty(fn () => collect([Website::class.':en'])),
-    ]);
-
 /*
  * Bootstrapping.
- *
- * We will resolve the container and merge in the user's configuration.
  */
 
-/** @var Container */
-$container = require __DIR__.'/../bootstrap.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
-$config = $container->make(Configuration::class)->merge([
-    'manual_path' => $options->get('--manual'),
-    'generators' => $generators->map(fn (string $generator) => [
-        'class' => str($generator)->before(':')->value(),
-        'arguments' => str($generator)->contains(':')
-            ? str($generator)->after(':')->explode(',')
-            : [],
-    ]),
-    'generation' => ! $options->get('--no-generation'),
-    'index' => ! $options->get('--no-index'),
-    'output_ansi' => ! $options->get('--no-ansi'),
-    'debug' => $options->get('--debug'),
-]);
+error_reporting(E_ALL);
+
+/** @var Container */
+$container = require_once __DIR__.'/../bootstrap.php';
+
+/*
+ * Resolve CLI input options.
+ */
+
+$options = collect($argv)
+    ->skip(1)
+    ->filter(fn ($value) => str_starts_with($value, '-'))
+    ->map(fn ($option) => with(explode('=', $option), fn ($bits) => [
+        'name' => $bits[0],
+        'value' => $bits[1] ?? true,
+    ]));
+
+$option = fn ($key): ?string => $options->firstWhere('name', $key)['value'] ?? null;
+$options = fn ($key): Collection => $options->where('name', $key)->pluck('value');
+
+/*
+ * Output help information when requested.
+ */
 
 $output = $container->make(Output::class);
 
-if ($input->contains('--help')) {
-    $output(file_get_contents(__DIR__.'/help.txt'));
+if ($option('--help')) {
+    $output->write(file_get_contents(__DIR__.'/help.txt'));
     exit;
 }
+
+/*
+ * Ensure required arguments are provided.
+ */
+
+if (! $option('--manual')) {
+    $container->make(Output::class)->write('<yellow>The [--manual] argument is required.</yellow>');
+    exit(1);
+}
+
+/*
+ * Adjust config based on CLI input.
+ */
+
+$config = $container->make(Configuration::class);
+
+$option('--debug') && $config->merge(['debug' => true]);
+
+/*
+ * Here we go.
+ */
 
 $output->line('🍃 <🌈>Alfresco</🌈>');
 
@@ -90,15 +81,15 @@ $output->line('🍃 <🌈>Alfresco</🌈>');
  * process them first.
  */
 
-[$generators, $indexes] = $config->get('generators')
-    ->map(fn (array $config) => $container->make(
-        $config['class'],
-        $config['arguments']
-    ))->pipe(fn (Collection $generators) => [
+[$generators, $indexes] = $options('--generator')
+    ->whenEmpty(fn () => collect([\Alfresco\Website\Generator::class]))
+    ->map(fn ($class) => $container->make($class))
+    ->pipe(fn ($generators) => [
         $generators,
         $generators->whereInstanceOf(DependsOnIndexes::class)
-            ->map(fn (DependsOnIndexes $generator) => $generator->indexes())
-            ->flatten(),
+            ->flatMap(fn ($generator) => $generator->indexes())
+            ->unique()
+            ->map(fn ($class) => $container->make($class)),
     ]);
 
 /*
@@ -109,7 +100,7 @@ $output->line('🍃 <🌈>Alfresco</🌈>');
  * with the given generators / indexes to produce the desired output.
  */
 
-$manual = $container->make(Manual::class);
+$manual = $container->make(ManualFactory::class)->make($option('--manual'));
 $process = $container->make(Process::class);
 
 /*
@@ -121,26 +112,26 @@ $process = $container->make(Process::class);
  * information for generators which allows them to, kind, "look ahead".
  */
 
-if ($config->get('index')) {
+if ($option('no-index')) {
+    $output->line('<yellow>Skipping indexing.</yellow>');
+} else {
     $output->line('<blue>Indexing.</blue>');
 
-    $duration = measure(fn () => $process($manual, $indexes, function (Node $node, int $i) use ($options, $output) {
-        if ($options->get('--debug')) {
-            $output('<dim>Hit ENTER to process node: </dim>');
-            $output("<{$node->name}");
+    $duration = measure(fn () => $process($manual, $indexes, function ($node, int $i) use ($option, $output) {
+        if ($option('--debug')) {
+            $output->write('<dim>Hit ENTER to process node: </dim>');
+            $output->write("<{$node->name}");
             $id = $node->hasId() ? $node->id() : null;
-            $output(' id="'.($id).'"');
-            $output(' depth="'.$node->depth.'"');
-            $output('>');
+            $output->write(' id="'.($id).'"');
+            $output->write(' depth="'.$node->depth.'"');
+            $output->write('>');
             fgets(STDIN);
         } elseif ($i % 5000 === 0) {
-            $output('<🌈>.</🌈>');
+            $output->write('<🌈>.</🌈>');
         }
     }));
 
     $output->line("Indexing completed in <green><bold>{$duration}</bold></green> seconds.");
-} else {
-    $output->line('<yellow>Skipping indexing.</yellow>');
 }
 
 /*
@@ -160,26 +151,26 @@ $manual = $container->make(Manual::class);
  * create the desired builds.
  */
 
-if ($config->get('generation')) {
+if ($option('--no-generation')) {
+    $output->line('<yellow>Skipping generation.</yellow>');
+} else {
     $output->line('<blue>Generating.</blue>');
 
-    $duration = measure(fn () => $process($manual, $generators, function (Node $node, int $i) use ($options, $output) {
-        if ($options->get('--debug')) {
-            $output("<{$node->name}");
+    $duration = measure(fn () => $process($manual, $generators, function ($node, int $i) use ($option, $output) {
+        if ($option('--debug')) {
+            $output->write("<{$node->name}");
             // $output(' id="'.$node->hasId() ? $node->id() : ''.'"');
-            $output(' depth="'.$node->depth.'"');
-            $output('>');
+            $output->write(' depth="'.$node->depth.'"');
+            $output->write('>');
             $output->line('Hit ENTER to continue.');
 
             fgets(STDIN);
         } elseif ($i % 5000 === 0) {
-            $output('<🌈>.</🌈>');
+            $output->write('<🌈>.</🌈>');
         }
     }));
 
     $output->line("Generation completed in <green><bold>{$duration}</bold></green> seconds.");
-} else {
-    $output->line('<yellow>Skipping generation.</yellow>');
 }
 
 $output->line('<green>Finished.</green>');

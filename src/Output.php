@@ -2,7 +2,6 @@
 
 namespace Alfresco;
 
-use Closure;
 use Illuminate\Support\Stringable;
 
 class Output
@@ -11,18 +10,11 @@ class Output
 
     protected bool $lineWritten = true;
 
-    public function __construct(
-        protected Closure $write,
-        protected bool $ansi,
-    ) {
-        //
-    }
-
-    public function __invoke(string $message): Output
+    public function write(string $message): Output
     {
         $this->lineWritten = false;
 
-        ($this->write)(str($message)
+        echo str($message)
             ->replace([
                 '<bold>',
                 '</bold>',
@@ -34,7 +26,7 @@ class Output
                 '</blue>',
                 '<dim>',
                 '</dim>',
-            ], $this->ansi ? [
+            ], [
                 "\033[1m", // bold
                 "\033[22m",
                 "\033[92m", // green
@@ -45,7 +37,7 @@ class Output
                 "\033[39m",
                 "\033[2m", // dim
                 "\033[22m",
-            ] : '')
+            ])
             ->whenContains(['<🌈>', '</🌈>'], function (Stringable $message) {
                 $result = str('');
 
@@ -60,8 +52,7 @@ class Output
                 }
 
                 return $result->append($message);
-            })
-            ->value());
+            });
 
         return $this;
     }
@@ -72,7 +63,7 @@ class Output
             $message = PHP_EOL.$message;
         }
 
-        $this($message.PHP_EOL);
+        $this->write($message.PHP_EOL);
 
         $this->lineWritten = true;
 
@@ -84,10 +75,6 @@ class Output
      */
     protected function 🌈(string $message, float $frequency): string
     {
-        if (! $this->ansi) {
-            return $message;
-        }
-
         return collect(mb_str_split($message))
             ->map(function (string $character) use ($frequency) {
                 $this->rainboxIndex++;
