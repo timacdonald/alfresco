@@ -5,9 +5,6 @@ namespace Alfresco;
 use Alfresco\Contracts\Slotable;
 use Closure;
 use Illuminate\Container\Container;
-use Illuminate\Support\Collection;
-use ReflectionFunction;
-use ReflectionParameter;
 use Stringable;
 
 class ComponentFactory
@@ -68,14 +65,14 @@ class ComponentFactory
      */
     public function component(string $path, array $data = []): Slotable
     {
-        return with($this->resolve($path, $data), function (Slotable|string $component) {
-            return $component instanceof Slotable
-                ? $component
-                : new HtmlString($component);
-        });
+        return with($this->resolve($path, $data), fn (Slotable|string $component) => $component instanceof Slotable
+            ? $component
+            : new HtmlString($component));
     }
 
     /**
+     * Resolve the component.
+     *
      * @param  array<string, mixed>  $data
      */
     protected function resolve(string $path, array $data): Slotable|string
@@ -84,23 +81,12 @@ class ComponentFactory
     }
 
     /**
-     * @return Collection<int, ReflectionParameter>
+     * The component resolver.
      */
-    protected function requiredParameters(Closure $resolver): Collection
-    {
-        return $this->parametersFor($resolver)->reject->isOptional();
-    }
-
-    /**
-     * @return Collection<int, ReflectionParameter>
-     */
-    protected function parametersFor(Closure $resolver): Collection
-    {
-        return collect((new ReflectionFunction($resolver))->getParameters());
-    }
-
     protected function resolver(string $path): Closure
     {
-        return $this->resolverCache[$path] ??= (static fn (string $__path) => require_once $__path)("{$this->config->get('component_directory')}/{$path}.php");
+        return $this->resolverCache[$path] ??= (static fn (string $__path) => require_once $__path)(
+            "{$this->config->get('component_directory')}/{$path}.php"
+        );
     }
 }
