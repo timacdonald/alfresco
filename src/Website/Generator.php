@@ -204,7 +204,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     /**
      * Retrieve the generator's indexes.
      *
-     * @return array<int, GeneratorContract>
+     * @return list<GeneratorContract>
      */
     public function indexes(): array
     {

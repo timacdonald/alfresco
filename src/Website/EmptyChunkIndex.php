@@ -12,7 +12,15 @@ use Illuminate\Support\Collection;
 
 class EmptyChunkIndex implements Generator
 {
-    protected ?Stream $stream;
+    /**
+     * The empty chunk output stream.
+     */
+    protected Stream $stream;
+
+    /**
+     * The cache of all ids.
+     */
+    protected ?Collection $idsCache;
 
     /**
      * Indicates that the current chunk is empty.
@@ -31,7 +39,10 @@ class EmptyChunkIndex implements Generator
         protected FileStreamFactory $streamFactory,
         protected Configuration $config
     ) {
-        //
+        $this->stream = $this->streamFactory->make(
+            "{$this->config->get('index_directory')}/website/{$this->config->get('language')}/empty_pages.php",
+            1000,
+        );
     }
 
     /**
@@ -39,7 +50,7 @@ class EmptyChunkIndex implements Generator
      */
     public function setUp(): void
     {
-        $this->streamInstance()->write(<<< 'PHP'
+        $this->stream->write(<<< 'PHP'
             <?php
 
             return [
@@ -52,7 +63,7 @@ class EmptyChunkIndex implements Generator
      */
     public function stream(Node $node): Stream
     {
-        return $this->streamInstance();
+        return $this->stream;
     }
 
     /**
@@ -91,7 +102,7 @@ class EmptyChunkIndex implements Generator
      */
     public function tearDown(): void
     {
-        $this->streamInstance()->write('];');
+        $this->stream->write('];');
     }
 
     /**
@@ -101,7 +112,7 @@ class EmptyChunkIndex implements Generator
      */
     public function ids(): Collection
     {
-        return collect(require_once $this->streamInstance()->path);
+        return $this->idsCache ??= collect(require_once $this->stream->path);
     }
 
     /**
@@ -112,13 +123,5 @@ class EmptyChunkIndex implements Generator
         return $this->isEmpty
             ? $this->chunk
             : null;
-    }
-
-    protected function streamInstance()
-    {
-        return $this->stream ??= $this->streamFactory->make(
-            "{$this->config->get('index_directory')}/website/{$this->config->get('language')}/empty_pages.php",
-            1000,
-        );
     }
 }
