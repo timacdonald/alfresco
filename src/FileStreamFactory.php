@@ -9,8 +9,14 @@ use function Safe\mkdir;
 
 class FileStreamFactory
 {
+    /**
+     * The in-memory buffer.
+     */
     protected array $buffer = [];
 
+    /**
+     * Make a new file string.
+     */
     public function make(string $path, int $chunk): Stream
     {
         return new Stream(
@@ -38,6 +44,9 @@ class FileStreamFactory
         );
     }
 
+    /**
+     * Flush the buffer to the stream.
+     */
     protected function flushBuffer($file): void
     {
         if ($this->buffer === []) {

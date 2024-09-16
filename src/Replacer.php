@@ -8,7 +8,7 @@ use RuntimeException;
 
 use function Safe\file_get_contents;
 
-class CodeReplacer
+class Replacer
 {
     /**
      * Create a new instance.
@@ -22,7 +22,7 @@ class CodeReplacer
     /**
      * Make replacements for the given code snippet.
      */
-    public function replace(string $original): string
+    public function handle(string $original, string $language): string
     {
         // TODO make this look for a .replacement.php or something better.
         return $original;

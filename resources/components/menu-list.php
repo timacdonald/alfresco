@@ -21,7 +21,7 @@ return fn (
             attributes: [
                 'class' => [
                     'hover:underline text-sm relative flex items-center',
-                    $title->is($active) ? 'xunderline text-violet-700 font-bold' : 'text-violet-950',
+                    $title->is($active) ? 'text-violet-700 font-bold' : 'text-violet-950',
                 ],
                 'href' => "{$title->id}.html",
             ],
@@ -37,7 +37,10 @@ return fn (
         before: $render->tag(
             as: 'summary',
             attributes: [
-                'class' => 'cursor-pointer py-1.5 list-outside marker:text-violet-300 text-violet-950 text-sm',
+                'class' => [
+                    'cursor-pointer py-1.5 list-outside text-violet-950 text-sm',
+                    $title->isOrHasChild($active) ? 'marker:text-violet-700' : 'marker:text-violet-300',
+                ],
             ],
             before: $title->html,
         ),
@@ -53,7 +56,7 @@ return fn (
                     attributes: [
                         'class' => [
                             'hover:underline text-sm relative flex items-center',
-                            $title->is($active) ? 'xunderline text-violet-700 font-bold' : 'text-violet-950',
+                            $title->is($active) ? 'text-violet-700 font-bold' : 'text-violet-950',
                         ],
                         'href' => "{$title->id}.html",
                     ],

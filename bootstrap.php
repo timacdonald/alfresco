@@ -14,6 +14,7 @@ return tap(Container::getInstance(), function (Container $container) {
         'language' => 'en',
         'root_directory' => __DIR__,
         'build_directory' => __DIR__.'/build/output',
+        'cache_directory' => __DIR__.'/build/cache',
         'resource_directory' => __DIR__.'/resources',
         'index_directory' => __DIR__.'/build/indexes',
         'component_directory' => __DIR__.'/resources/components',

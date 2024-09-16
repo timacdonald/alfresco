@@ -24,6 +24,8 @@ class ComponentFactory
         protected Configuration $config,
         protected Translation $translation,
         protected Container $container,
+        protected Highlighter $highlighter,
+        protected Replacer $replacer,
     ) {
         //
     }
@@ -44,6 +46,17 @@ class ComponentFactory
     }
 
     /**
+     * Render the given code snippet.
+     */
+    public function codeSnippet(string $snippet, string $language)
+    {
+        return array_reduce([
+            $this->replacer,
+            $this->highlighter,
+        ], fn ($snippet, $modifier) => $modifier->handle($snippet, $language), $language);
+    }
+
+    /**
      * Render inline text.
      */
     public function inlineText(string $before = '', string $after = ''): Wrapper
@@ -54,6 +67,9 @@ class ComponentFactory
         );
     }
 
+    /**
+     * Render a component wrapper.
+     */
     public function wrapper(string|Stringable $before = '', string|Stringable $after = '', ?Slotable $slot = null): Wrapper
     {
         return new Wrapper($before, $after, $slot);

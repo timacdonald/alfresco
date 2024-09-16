@@ -2,7 +2,7 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\CodeReplacer;
+use Alfresco\Replacer;
 use Alfresco\ComponentFactory;
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Contracts\Generator as GeneratorContract;
@@ -34,8 +34,6 @@ class Generator implements DependsOnIndexes, GeneratorContract
         protected FileStreamFactory $streamFactory,
         protected Output $output,
         protected ComponentFactory $render,
-        protected Highlighter $highlighter,
-        protected CodeReplacer $replace,
         protected TitleIndex $titleIndex,
         protected EmptyChunkIndex $emptyChunkIndex,
     ) {
@@ -223,18 +221,12 @@ class Generator implements DependsOnIndexes, GeneratorContract
 
         // Example code that you would write in your editor.
         if (($programlisting = $node->parent('programlisting')) && $programlisting->hasRole()) {
-            return $this->highlighter->highlight(
-                $this->replace->replace($content),
-                $programlisting->role()
-            );
+            return $this->render->codeSnippet($content, $programlisting->role());
         }
 
         // Output that you would see in your browser or terminal.
         if (($screen = $node->parent('screen')) && $screen->hasRole()) {
-            return $this->highlighter->highlight(
-                $this->replace->replace($content),
-                $screen->role()
-            );
+            return $this->render->codeSnippet($content, $screen->role());
         }
 
         return e($content);
@@ -251,10 +243,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             $value = $node->value;
 
             if ($screen->hasRole()) {
-                return $this->highlighter->highlight(
-                    $this->replace->replace($value),
-                    $screen->role()
-                );
+                return $this->render->codeSnippet($value, $screen->role());
             }
 
             return $value;

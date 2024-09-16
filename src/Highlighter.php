@@ -2,6 +2,7 @@
 
 namespace Alfresco;
 
+use Illuminate\Config\Repository as Configuration;
 use Spatie\ShikiPhp\Shiki;
 
 use function Safe\file_get_contents;
@@ -13,32 +14,42 @@ class Highlighter
      * Create a new instance.
      */
     public function __construct(
-        protected Shiki $shiki
+        protected Shiki $shiki,
+        protected Configuration $config,
     ) {
         //
     }
 
     /**
-     * @todo Check that these mappings all make sense.
+     * Highlight the given code snippet.
      */
-    public function highlight(string $code, string $language): string
+    public function handle(string $code, string $language): string
     {
-        // TODO inject path. Quick hack
-        $hash = hash('xxh128', $code);
-
-        if (file_exists($path = __DIR__."/../build/cache/{$hash}.{$language}.html")) {
+        if (file_exists($path = $this->path($code, $language))) {
             return file_get_contents($path);
         }
 
-        $content = $this->shiki->highlightCode($code, match ($language) {
+        return tap($this->shiki->highlightCode($code, match ($language) {
             'php' => 'blade',
             'apache-conf' => 'apache',
             'nginx-conf' => 'nginx',
             default => $language,
-        });
+        }), fn ($content) => file_put_contents($path, $content));
+    }
 
-        file_put_contents($path, $content);
+    /**
+     * The cache path for the given code snippet.
+     */
+    protected function path(string $code, string $language): string
+    {
+        return "{$this->config->get('cache_directory')}/{$this->hash($code, $language)}.{$language}.html";
+    }
 
-        return $content;
+    /**
+     * The hash for the given code snippet.
+     */
+    protected function hash(string $code, string $language): string
+    {
+        return hash('xxh128', "{$language}\n{$code}");
     }
 }
