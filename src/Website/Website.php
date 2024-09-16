@@ -18,6 +18,6 @@ class Website
             'preface',
             'sect1',
             'section',
-        ]) && $node->doesNotObjectToChunking();
+        ]) && $node->hasId() && ! $node->objectsToChunking();
     }
 }

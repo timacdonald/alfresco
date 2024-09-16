@@ -221,11 +221,10 @@ class Node
         };
     }
 
-    public function doesNotObjectToChunking(): bool
+    public function objectsToChunking(): bool
     {
-        return ($this->attributes[Manual::XMLNS_PHD]['chunk'] ?? 'true') !== 'false'
-            && ! str_contains($this->attributes[Manual::XMLNS_DOCBOOK]['annotations'] ?? '', 'chunk:false')
-            && $this->hasId();
+        return isset($this->attributes[Manual::XMLNS_DOCBOOK]['annotations'])
+            && str_contains($this->attributes[Manual::XMLNS_DOCBOOK]['annotations'], 'chunk:false');
     }
 
     public function innerContent(): string
