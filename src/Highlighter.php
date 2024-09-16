@@ -3,7 +3,9 @@
 namespace Alfresco;
 
 use Illuminate\Config\Repository as Configuration;
+use Illuminate\Support\Collection;
 use Spatie\ShikiPhp\Shiki;
+use Symfony\Component\Finder\Finder;
 
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
@@ -11,11 +13,17 @@ use function Safe\file_put_contents;
 class Highlighter
 {
     /**
+     * The cache of already highlighted files.
+     */
+    protected Collection $filesCache;
+
+    /**
      * Create a new instance.
      */
     public function __construct(
         protected Shiki $shiki,
         protected Configuration $config,
+        protected Finder $finder,
     ) {
         //
     }
@@ -25,7 +33,7 @@ class Highlighter
      */
     public function handle(string $code, string $language): string
     {
-        if (file_exists($path = $this->path($code, $language))) {
+        if ($this->files()->contains($path = $this->path($code, $language))) {
             return file_get_contents($path);
         }
 
@@ -42,7 +50,7 @@ class Highlighter
      */
     protected function path(string $code, string $language): string
     {
-        return "{$this->config->get('cache_directory')}/{$this->hash($code, $language)}.{$language}.html";
+        return "{$this->config->get('cache_directory')}/{$this->hash($code, $language)}-highlight.{$language}.html";
     }
 
     /**
@@ -51,5 +59,15 @@ class Highlighter
     protected function hash(string $code, string $language): string
     {
         return hash('xxh128', "{$language}\n{$code}");
+    }
+
+    protected function files(): Collection
+    {
+        return $this->filesCache ??= collect($this->finder
+            ->in($this->config->get('cache_directory'))
+            ->files()
+            ->depth(0)
+            ->name('*-highlight.*.html')
+            ->getIterator())->keys();
     }
 }

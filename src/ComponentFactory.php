@@ -51,9 +51,9 @@ class ComponentFactory
     public function codeSnippet(string $snippet, string $language)
     {
         return array_reduce([
-            $this->replacer,
-            $this->highlighter,
-        ], fn ($snippet, $modifier) => $modifier->handle($snippet, $language), $language);
+            $this->replacer->handle(...),
+            $this->highlighter->handle(...),
+        ], fn ($snippet, $f) => $f($snippet, $language), $snippet);
     }
 
     /**
