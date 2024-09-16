@@ -5,7 +5,7 @@
 #docsearch .docsearch-btn {
     color: theme('colors.violet.500');
     height: 33px;
-    background: theme('colors.violet.50/50');
+    background: theme('colors.violet.25');
     border: 1px solid theme('colors.violet.100');
 }
 

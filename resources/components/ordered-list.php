@@ -10,7 +10,7 @@ return fn (
     attributes: [
         'type' => $type,
         'class' => [
-            'list-decimal pl-5 my-6 first:mt-0 last:mb-0 space-y-2',
+            'list-decimal pl-5 my-2 last:mb-0 space-y-2',
         ],
     ],
 );

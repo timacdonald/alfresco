@@ -12,15 +12,18 @@ return fn (
     Collection $empty,
 ) => $items->map(fn (Title $title) => $title->children->isEmpty()
     ? ($empty->contains(fn (Title $empty) => $title->is($empty)) ? '' : $render->tag(
-        as: 'li',
+        as: 'div',
         attributes: [
-            'class' => 'pl-4 py-1.5',
+            'class' => [
+                'relative flex items-center pl-4 py-1.5 before:block before:h-1.5 before:w-1.5 before:rounded-full before:absolute before:left-[3px]',
+                $title->is($active) ? 'before:bg-violet-700' : 'before:bg-violet-300',
+            ],
         ],
         before: $render->tag(
             as: 'a',
             attributes: [
                 'class' => [
-                    'hover:underline text-sm relative flex items-center',
+                    'text-sm relative flex items-center',
                     $title->is($active) ? 'text-violet-700 font-bold' : 'text-violet-950',
                 ],
                 'href' => "{$title->id}.html",
@@ -37,25 +40,25 @@ return fn (
         before: $render->tag(
             as: 'summary',
             attributes: [
-                'class' => [
-                    'cursor-pointer py-1.5 list-outside text-violet-950 text-sm',
-                    $title->isOrHasChild($active) ? 'marker:text-violet-700' : 'marker:text-violet-300',
-                ],
+                'class' => 'cursor-pointer py-1.5 list-outside text-violet-950 text-sm marker:text-violet-300',
             ],
             before: $title->html,
         ),
         after: ($empty->contains(fn (Title $empty) => $title->is($empty))
             ? ''
             : $render->tag(
-                as: 'li',
+                as: 'div',
                 attributes: [
-                    'class' => 'pl-4 py-1.5',
+                    'class' => [
+                        'relative flex items-center pl-4 py-1.5 before:block before:h-1.5 before:w-1.5 before:rounded-full before:absolute before:left-[3px]',
+                        $title->is($active) ? 'before:bg-violet-700' : 'before:bg-violet-300',
+                    ],
                 ],
                 before: $render->tag(
                     as: 'a',
                     attributes: [
                         'class' => [
-                            'hover:underline text-sm relative flex items-center',
+                            'text-sm relative flex items-center',
                             $title->is($active) ? 'text-violet-700 font-bold' : 'text-violet-950',
                         ],
                         'href' => "{$title->id}.html",

@@ -15,13 +15,13 @@ return fn (
     attributes: [
         'id' => $link->destinationWithoutFragmentHash(),
         'class' => [
-            'font-extrabold text-violet-800 leading-tight tracking-tight',
+            'font-extrabold text-violet-950 leading-tight tracking-tight',
             match ($level) {
                 // Due to line-height the first heading on a page doesn't have
                 // consistent spacing on top and sides. We will just "pull" it
                 // up a few pixels.
                 1 => 'text-4xl -mt-3',
-                2 => 'text-3xl my-6',
+                2 => 'text-2xl my-6',
                 6 => 'bg-red-500',
             },
         ],
@@ -32,13 +32,6 @@ return fn (
             'href' => $link->destination,
             'class' => 'relative group hover:underline',
         ],
-        before: $render->tag(
-            as: 'span',
-            attributes: [
-                'class' => 'text-sm opacity-75 mr-2',
-            ],
-            before: "[{$level}]",
-        ),
         after: $render->tag(
             as: 'span',
             attributes: [

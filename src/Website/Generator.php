@@ -549,7 +549,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderEntry(Node $node): Slotable|string
     {
         return $this->render->tag(
-            $node->hasParent('row.thead') ? 'th' : 'td'
+            $node->hasParent('row.thead') ? 'th' : 'td',
+            attributes: [
+                'class' => 'py-2 px-3 text-left first-of-type:pl-6 last:pr-6 tabular-nums'
+            ]
         );
     }
 
@@ -707,12 +710,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderInformalTable(Node $node): Slotable|string
     {
-        return $this->render->tag(
-            as: 'table',
-            attributes: [
-                'class' => 'my-6',
-            ]
-        );
+        return $this->renderTable($node);
     }
 
     /**
@@ -774,6 +772,12 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderListItem(Node $node): Slotable|string
     {
+        if ($node->hasParent('varlistentry')) {
+            return $this->render->tag('dd', attributes: [
+                'class' => 'mt-2',
+            ]);
+        }
+
         return $this->render->tag('li');
     }
 
@@ -1041,7 +1045,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderRow(Node $node): Slotable|string
     {
-        return $this->render->tag('tr');
+        return $this->render->tag('tr', attributes: [
+            'class' => 'border-b border-violet-100 even:bg-violet-25',
+        ]);
     }
 
     /**
@@ -1189,7 +1195,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         return $this->render->tag(
             as: 'table',
             attributes: [
-                'class' => 'my-6',
+                'class' => 'my-6 w-full border-t border-l border-r border-violet-100',
             ],
         );
     }
@@ -1217,6 +1223,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
                 'id' => $node->parent('varlistentry')->hasId()
                     ? $node->parent('varlistentry')->id()
                     : false,
+                'class' => 'space-x-2 text-xl',
             ],
         );
     }
@@ -1238,7 +1245,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderTHead(Node $node): Slotable|string
     {
-        return $this->render->tag('thead');
+        return $this->render->tag('thead', attributes: [
+            'class' => 'bg-violet-50 text-violet-950 font-bold border-b border-violet-100',
+        ]);
     }
 
     /**
@@ -1344,7 +1353,27 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderType(Node $node): Slotable|string
     {
-        return $this->render->component('inline-code');
+        return $this->render->component('inline-code')->wrapSlot($this->render->component('link', [
+            'link' => Link::internal(match(strtolower($node->innerContent())) {
+                'enum' => 'language.types.enumerations',
+                'int' => 'language.types.integer',
+                'bool' => 'language.types.boolean',
+                'string' => 'language.types.string',
+                'mixed' => 'language.types.mixed',
+                'null' => 'language.types.null',
+                'float' => 'language.types.float',
+                'array' => 'language.types.array',
+                'object' => 'language.types.object',
+                'callable' => 'language.types.callable',
+                'resource', 'Resource' => 'language.types.resource',
+                'never' => 'language.types.never',
+                'void' => 'language.types.void',
+                'self', 'parent', 'static' => 'language.types.relative-class-types',
+                'false' => 'reserved.constants#constant.false',
+                'true' => 'reserved.constants#constant.true',
+                'iterable' => 'language.types.iterable',
+            })
+        ]));
     }
 
     /**
@@ -1354,7 +1383,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderVariableList(Node $node): Slotable|string
     {
-        return $this->render->tag('dl');
+        return $this->render->tag('dl', attributes: [
+            'class' => 'space-y-6',
+        ]);
     }
 
     /**
@@ -1364,7 +1395,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderVarListEntry(Node $node): Slotable|string
     {
-        return '';
+        return $this->render->tag(
+            as: 'div',
+        );
     }
 
     /**

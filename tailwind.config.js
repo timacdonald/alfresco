@@ -9,6 +9,11 @@ export default {
     extend: {
         fontFamily: {
             mono: ['"Roboto Mono"', ...defaultTheme.fontFamily.mono],
+        },
+        colors: {
+            violet: {
+                '25': '#f8f5ff'
+            }
         }
     },
   },

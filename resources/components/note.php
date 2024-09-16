@@ -9,13 +9,13 @@ return fn (
     as: 'div',
     attributes: [
         'aria-role' => 'note',
-        'class' => 'bg-blue-50 my-6 first:mt-0 last:mb-0 p-6 -mx-6 rounded border border-blue-100 text-blue-950 relative',
+        'class' => 'bg-blue-50/50 my-6 first:mt-0 last:mb-0 p-6 rounded border border-blue-100 text-blue-950 relative',
     ],
     before: $render->tag(
         as: 'strong',
         before: $translation->get('note.badge'),
         attributes: [
-            'class' => 'absolute inline-block right-3 -top-3 rounded bg-blue-200 leading-none py-1 px-2 text-sm font-semibold',
+            'class' => 'absolute inline-block right-3 -top-3 rounded bg-blue-200 leading-none py-1 px-2 text-sm font-semibold font-mono uppercase',
         ],
     ),
     // We wrap this in a `div` to ensure that the first / last element
