@@ -7,3 +7,5 @@
 - [ ] Abbreviations and Acronyms should have a title where they aren't described within the sentence.
 - [ ] Ensure examples using `figure` scales.
 - [ ] The "PHP Manual" navigation item, the "PHP Manual" title on the preface page, and the "PHP Manual" HTML page need to be manually omitted.
+- [x] The `code` tags are forcing the font size when used in other elements, such as headings. Need a better way to make code blocks small while allowing parents to override.
+- [ ] Pull "see also" up into sidebar

@@ -1223,7 +1223,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
                 'id' => $node->parent('varlistentry')->hasId()
                     ? $node->parent('varlistentry')->id()
                     : false,
-                'class' => 'space-x-2 text-xl',
+                'class' => 'space-x-2',
             ],
         );
     }
