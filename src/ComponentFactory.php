@@ -4,6 +4,7 @@ namespace Alfresco;
 
 use Alfresco\Contracts\Slotable;
 use Closure;
+use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
 use Stringable;
 

@@ -2,6 +2,7 @@
 
 namespace Alfresco;
 
+use Illuminate\Config\Repository as Configuration;
 use RuntimeException;
 
 class Translation

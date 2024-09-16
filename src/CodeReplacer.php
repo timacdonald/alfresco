@@ -2,6 +2,7 @@
 
 namespace Alfresco;
 
+use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Str;
 use RuntimeException;
 

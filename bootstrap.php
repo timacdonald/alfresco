@@ -1,8 +1,8 @@
 <?php
 
 use Alfresco\ComponentFactory;
-use Alfresco\Configuration;
 use Alfresco\Translation;
+use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
 use Spatie\ShikiPhp\Shiki;
 

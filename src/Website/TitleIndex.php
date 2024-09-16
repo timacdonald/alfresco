@@ -3,13 +3,13 @@
 namespace Alfresco\Website;
 
 use Alfresco\ComponentFactory;
-use Alfresco\Configuration;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\FileStreamFactory;
 use Alfresco\HtmlString;
 use Alfresco\Node;
 use Alfresco\Stream;
+use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
 use RuntimeException;
 

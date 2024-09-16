@@ -4,7 +4,6 @@ namespace Alfresco\Website;
 
 use Alfresco\CodeReplacer;
 use Alfresco\ComponentFactory;
-use Alfresco\Configuration;
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Contracts\Generator as GeneratorContract;
 use Alfresco\Contracts\Slotable;
@@ -15,6 +14,7 @@ use Alfresco\Link;
 use Alfresco\Node;
 use Alfresco\Output;
 use Alfresco\Stream;
+use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
 use RuntimeException;
 use Safe\DateTimeImmutable;
