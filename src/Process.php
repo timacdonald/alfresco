@@ -19,10 +19,8 @@ class Process
 
     /**
      * Pending "closers" to run.
-     *
-     * @var array<int, array{ 0: string, 1: Node }>
      */
-    protected array $closers = [];
+    protected SplObjectStorage $closers;
 
     /**
      * Process the manual against the given generators.
@@ -32,12 +30,14 @@ class Process
     public function handle(Manual $manual, iterable $generators, ?Closure $onTick = null): void
     {
         $this->streams = new SplObjectStorage;
+        $this->closers = new SplObjectStorage;
 
         $onTick ??= fn () => null;
         $iteration = 0;
 
         foreach ($generators as $generator) {
             $generator->setUp();
+            $this->closers[$generator] = [];
         }
 
         while ($node = $manual->advance()) {
@@ -104,9 +104,10 @@ class Process
             $generator->tearDown();
 
             $this->streams[$generator]->close();
-
-            $this->streams->detach($generator);
         }
+
+        $this->streams = new SplObjectStorage;
+        $this->closers = new SplObjectStorage;
     }
 
     /**
@@ -130,7 +131,7 @@ class Process
      */
     protected function handleClosingElement(Generator $generator, Node $node): void
     {
-        if ($this->matchesNextPendingCloser($node)) {
+        if ($this->matchesNextPendingCloser($generator, $node)) {
             $this->writeNextCloser($generator);
         }
     }
@@ -178,13 +179,13 @@ class Process
     /**
      * Determine if the node matches the next pending closer.
      */
-    protected function matchesNextPendingCloser(Node $node): bool
+    protected function matchesNextPendingCloser(Generator $generator, Node $node): bool
     {
-        if ($this->closers === []) {
+        if ($this->closers[$generator] === []) {
             return false;
         }
 
-        return with($this->closers[array_key_last($this->closers)][1], function (Node $openingNode) use ($node) {
+        return with($this->closers[$generator][array_key_last($this->closers[$generator])][1], function (Node $openingNode) use ($node) {
             return $openingNode->name === $node->name && $openingNode->depth === $node->depth;
         });
     }
@@ -194,7 +195,7 @@ class Process
      */
     protected function writePendingClosers(Generator $generator): void
     {
-        while ($this->closers !== []) {
+        while ($this->closers[$generator] !== []) {
             $this->writeNextCloser($generator);
         }
     }
@@ -204,8 +205,12 @@ class Process
      */
     protected function writeNextCloser(Generator $generator): void
     {
-        if ($this->closers !== []) {
-            $this->write($generator, ...array_pop($this->closers));
+        if ($this->closers[$generator] !== []) {
+            $closers = $this->closers[$generator];
+
+            $this->write($generator, ...array_pop($closers));
+
+            $this->closers[$generator] = $closers;
         }
     }
 
@@ -229,7 +234,10 @@ class Process
         if ($node->isSelfClosing) {
             $this->write($generator, $content->after(), $node);
         } else {
-            $this->closers[] = [$content->after(), $node];
+            $this->closers[$generator] = [
+                ...$this->closers[$generator],
+                [$content->after(), $node],
+            ];
         }
     }
 }

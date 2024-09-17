@@ -9,3 +9,6 @@
 - [ ] The "PHP Manual" navigation item, the "PHP Manual" title on the preface page, and the "PHP Manual" HTML page need to be manually omitted.
 - [x] The `code` tags are forcing the font size when used in other elements, such as headings. Need a better way to make code blocks small while allowing parents to override.
 - [ ] Pull "see also" up into sidebar
+- [ ] The homepage should contain the menu in full completely expanded.
+- [ ] Empty pages should include a redirect to their overview page.
+- [ ] Links should retain their color even when they contain a `code` snippet. Currently the inline code overrides the link color.

@@ -45,6 +45,11 @@ class Node
         return var_export($this->id(), true);
     }
 
+    public function exportValue(): string
+    {
+        return var_export($this->value, true);
+    }
+
     public function hasId(): bool
     {
         return isset($this->attributes[Manual::XMLNS_XML]['id']);

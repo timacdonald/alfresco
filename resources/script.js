@@ -1,5 +1,6 @@
 import { docsearch } from "meilisearch-docsearch";
 import "meilisearch-docsearch/css";
+import { computePosition, flip, offset, shift } from "@floating-ui/dom";
 
 docsearch({
   container: "#docsearch",
@@ -8,6 +9,47 @@ docsearch({
   indexUid: "docs",
   hotKeys: '/'
 })
+
+const updateTooltip = (tooltip, button) => computePosition(button, tooltip, {
+    placement: 'top',
+    middleware: [
+        flip(),
+        shift({ padding: 6 }),
+        offset(6)
+    ],
+}).then(({x, y}) => {
+  Object.assign(tooltip.style, {
+    left: `${x}px`,
+    top: `${y}px`,
+  });
+});
+
+const showTooltip = (tooltip, button) => {
+    tooltip.style.display = 'block'
+    updateTooltip(tooltip, button);
+    tooltip.classList.add('active')
+}
+
+const hideTooltip = (tooltip) => {
+    tooltip.classList.remove('active')
+
+    window.setTimeout(() => {
+        tooltip.style.display = 'none'
+    }, 200)
+}
+
+[
+  ['mouseenter', showTooltip],
+  ['mouseleave', hideTooltip],
+  ['focus', showTooltip],
+  ['blur', hideTooltip],
+].forEach(([event, listener]) => {
+    document.querySelectorAll('button[tooltip-target]').forEach((button) => {
+        const tooltip = document.getElementById(button.getAttribute('tooltip-target'))
+
+        button.addEventListener(event, () => listener(tooltip, button));
+    })
+});
 
 // const prefetched = new Set
 

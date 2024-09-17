@@ -1,10 +1,11 @@
 {
   "type": "module",
   "scripts": {
-      "build": "vite build",
-      "watch": "vite build --watch"
+    "build": "vite build",
+    "watch": "vite build --watch"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.6.11",
     "autoprefixer": "^10.4.13",
     "meilisearch-docsearch": "^0.6.0",
     "postcss": "^8.4.31",

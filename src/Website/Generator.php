@@ -10,12 +10,15 @@ use Alfresco\Contracts\Slotable;
 use Alfresco\Date;
 use Alfresco\FileStreamFactory;
 use Alfresco\Highlighter;
+use Alfresco\HtmlTag;
 use Alfresco\Link;
 use Alfresco\Node;
 use Alfresco\Output;
 use Alfresco\Stream;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 use RuntimeException;
 use Safe\DateTimeImmutable;
 
@@ -26,6 +29,8 @@ use function Safe\system;
 
 class Generator implements DependsOnIndexes, GeneratorContract
 {
+    protected int $tooltipIndex = 0;
+
     /**
      * Create a new instance.
      */
@@ -36,6 +41,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         protected ComponentFactory $render,
         protected TitleIndex $titleIndex,
         protected EmptyChunkIndex $emptyChunkIndex,
+        protected FunctionIndex $functionIndex,
     ) {
         //
     }
@@ -207,6 +213,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     public function indexes(): array
     {
         return [
+            $this->functionIndex,
             $this->titleIndex,
             $this->emptyChunkIndex,
         ];
@@ -626,10 +633,51 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderFunction(Node $node): Slotable|string
     {
-        return $this->render->component('inline-code')
-            ->wrapSlot($this->render->component('link', [
-                'link' => Link::internal("function.{$node->innerContent()}"),
-            ]));
+        $this->tooltipIndex++;
+
+        return $this->render->wrapper(
+            slot: $this->render->component('inline-code', [
+                'attributes' => [
+                    'class' => ['pr-7 relative'],
+                    'aria-describedby' => 'tooltip',
+                ]])
+                ->wrapSlot($this->render->wrapper(
+                    slot: $this->render->component('link', [
+                        'link' => Link::internal("function.{$node->innerContent()}"),
+                    ]),
+                    after: $this->render->tag(
+                        as: 'button',
+                        before: new HtmlString(<<<'HTML'
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-rose-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M9 17c2 0 2.8-1 2.8-2.8V10c0-2 1-3.3 3.2-3"/><path d="M9 11.2h5.7"/></svg>
+                            HTML),
+                        after: $this->render->tag(
+                            as: 'div',
+                            attributes: [
+                                'id' => "tooltip-{$this->tooltipIndex}",
+                                'role' => 'tooltip',
+                            ],
+                            after: new HtmlString(<<<'HTML'
+                            <div class="text-slate-600 text-left">
+                            <pre class="text-slate-400">
+                            /**
+                             * Output one or more strings.
+                             *
+                             * @since 4.0
+                             */
+                            </pre>
+                            <span class="text-blue-600">echo</span>(<span class="text-fuchsia-600">string</span> ...<span class="text-rose-600">$expressions</span>): <span class="text-purple-600">void</span>
+                            </div>
+                            HTML)
+                        ),
+                        attributes: [
+                            'tooltip-target' => "tooltip-{$this->tooltipIndex}",
+                            'class' => 'flex items-center justify-center ml-2 h-full w-6 border-l border-violet-100 absolute right-0 top-0 rounded-r',
+                        ]
+                    ),
+                )),
+        );
+
+        $first = false;
     }
 
     /**

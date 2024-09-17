@@ -4,11 +4,12 @@ namespace Alfresco;
 
 return fn (
     ComponentFactory $render,
+    array $attributes = [],
 ) => $render->tag(
     as: 'code',
-    attributes: [
+    attributes: array_merge_recursive([
         'class' => [
-            'text-[0.875em] not-italic bg-violet-950/5 text-violet-950 rounded leading-none p-1 inline-block font-mono',
+            'text-[0.875em] not-italic bg-violet-950/5 text-violet-950 rounded leading-none py-1 px-1.5 inline-block font-mono',
         ],
-    ],
+    ], $attributes),
 );

@@ -28,3 +28,27 @@
 #docsearch .docsearch-btn-key {
     display: none;
 }
+
+div[role="tooltip"] {
+    display: none;
+    opacity: 0;
+    transform: scale(0.75);
+    width: max-content;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: white;
+    color: theme('colors.slate.800');
+    font-family: theme('fontFamily.mono');
+    padding: 12px;
+    box-shadow: theme('boxShadow.xl');
+    border-radius: 8px;
+    border: 1px solid theme('colors.violet.100');
+    font-size: 0.875rem;
+    transition: all 0.2s ease-out;
+}
+
+div[role="tooltip"].active {
+    transform: scale(1);
+    opacity: 1;
+}
