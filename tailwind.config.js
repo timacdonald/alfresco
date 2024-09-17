@@ -5,6 +5,7 @@ export default {
   content: [
     "./build/output/*.html",
   ],
+  darkMode: 'selector',
   theme: {
     extend: {
         fontFamily: {
@@ -12,7 +13,7 @@ export default {
         },
         colors: {
             violet: {
-                '25': '#f8f5ff'
+                '25': '#f8f5ff',
             }
         }
     },

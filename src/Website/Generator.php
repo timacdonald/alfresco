@@ -1046,7 +1046,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderRow(Node $node): Slotable|string
     {
         return $this->render->tag('tr', attributes: [
-            'class' => 'border-b border-violet-100 even:bg-violet-25',
+            'class' => 'border-b border-violet-50 even:bg-violet-25',
         ]);
     }
 
@@ -1195,7 +1195,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         return $this->render->tag(
             as: 'table',
             attributes: [
-                'class' => 'my-6 w-full border-t border-l border-r border-violet-100',
+                'class' => 'my-6 w-full border-t border-l border-r border-violet-50',
             ],
         );
     }
