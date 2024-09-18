@@ -8,6 +8,9 @@ use XMLReader;
 
 class Node
 {
+    /**
+     * The inner content cache.
+     */
     protected ?string $innerContentCache;
 
     /**
@@ -31,6 +34,9 @@ class Node
         //
     }
 
+    /**
+     * Retrieve node's ID attribute.
+     */
     public function id(): string
     {
         if (! $this->hasId()) {
@@ -40,31 +46,49 @@ class Node
         return $this->attributes[Manual::XMLNS_XML]['id'];
     }
 
-    public function exportId(): string
-    {
-        return var_export($this->id(), true);
-    }
-
-    public function exportValue(): string
-    {
-        return var_export($this->value, true);
-    }
-
+    /**
+     * Determine if the node has an ID attribute.
+     */
     public function hasId(): bool
     {
         return isset($this->attributes[Manual::XMLNS_XML]['id']);
     }
 
+    /**
+     * Export the node's ID attribute.
+     */
+    public function exportId(): string
+    {
+        return var_export($this->id(), true);
+    }
+
+    /**
+     * Export the node's value.
+     */
+    public function exportValue(): string
+    {
+        return var_export($this->value, true);
+    }
+
+    /**
+     * Retrieve the node's role attribute.
+     */
     public function role(): string
     {
         return $this->attributes[Manual::XMLNS_DOCBOOK]['role'];
     }
 
+    /**
+     * Determine if the node has a role attribute.
+     */
     public function hasRole(): bool
     {
         return isset($this->attributes[Manual::XMLNS_DOCBOOK]['role']);
     }
 
+    /**
+     * Retrieve the referenced link.
+     */
     public function link(): Link
     {
         if (isset($this->attributes[Manual::XMLNS_DOCBOOK]['linkend'])) {
@@ -80,11 +104,17 @@ class Node
         });
     }
 
+    /**
+     * Retrieve the given attribute.
+     */
     public function attribute(string $name): string
     {
         return $this->attributes[Manual::XMLNS_DOCBOOK][$name];
     }
 
+    /**
+     * Determine if the node is whitespace.
+     */
     public function isWhitespace(): bool
     {
         return in_array($this->type, [
@@ -93,46 +123,95 @@ class Node
         ]);
     }
 
+    /**
+     * Determine if the node is an opening element.
+     */
     public function isOpeningElement(): bool
     {
         return $this->type === XMLReader::ELEMENT;
     }
 
+    /**
+     * Determine if the node is a closing element.
+     */
     public function isClosingElement(): bool
     {
         return $this->type === XMLReader::END_ELEMENT;
     }
 
+    /**
+     * Determine if the node is text content.
+     */
     public function isTextContent(): bool
     {
         return $this->type === XMLReader::TEXT;
     }
 
+    /**
+     * Determine if the node is CDATA.
+     */
     public function isCData(): bool
     {
         return $this->type === XMLReader::CDATA;
     }
 
+    /**
+     * Determine if the node is a processing instruction.
+     */
     public function isProcessingInstruction(): bool
     {
         return $this->type === XMLReader::PI;
     }
 
+    /**
+     * Determine if the node is a comment.
+     */
     public function isComment(): bool
     {
         return $this->type === XMLReader::COMMENT;
     }
 
+    /**
+     * Determine if the node is a doctype.
+     */
     public function isDoctype(): bool
     {
         return $this->type === XMLReader::DOC_TYPE;
     }
 
+    /**
+     * Determine if the node has the given previous sibling.
+     */
     public function hasPreviousSibling(string $sibling): bool
     {
         return $this->previousSibling === $sibling;
     }
 
+    /**
+     * Retrieve the given parent.
+     *
+     * Supports dot notation, e.g., path: "type.methodparameter"
+     */
+    public function parent(string $path): ?Node
+    {
+        $node = $this;
+
+        foreach (explode('.', $path) as $name) {
+            if ($node->parent?->name === $name) {
+                $node = $node->parent;
+            } else {
+                return null;
+            }
+        }
+
+        return $node;
+    }
+
+    /**
+     * Determine if the node has the given parent.
+     *
+     * Supports dot notation, e.g., path: "type.methodparameter"
+     */
     public function hasParent(?string $path = null): bool
     {
         if ($path === null) {
@@ -142,11 +221,17 @@ class Node
         return $this->parent($path) !== null;
     }
 
+    /**
+     * Determine if the node has no parent.
+     */
     public function hasNoParent(): bool
     {
         return $this->parent === null;
     }
 
+    /**
+     * Retrieve the node's parents as a dot separated path.
+     */
     public function parents(): ?string
     {
         if ($this->parent === null) {
@@ -163,6 +248,9 @@ class Node
         return rtrim($parents, '.');
     }
 
+    /**
+     * Retrieve the number of ancestors the node has.
+     */
     public function countAncestors(string $name): int
     {
         $node = $this;
@@ -177,6 +265,9 @@ class Node
         return $count;
     }
 
+    /**
+     * Retrieve the given ancestor for the node.
+     */
     public function ancestor(string $name): ?Node
     {
         $node = $this;
@@ -190,26 +281,17 @@ class Node
         return null;
     }
 
+    /**
+     * Determine if the node has the given ancestor.
+     */
     public function hasAncestor(string $name): bool
     {
         return $this->ancestor($name) !== null;
     }
 
-    public function parent(string $path): ?Node
-    {
-        $node = $this;
-
-        foreach (explode('.', $path) as $name) {
-            if ($node->parent?->name === $name) {
-                $node = $node->parent;
-            } else {
-                return null;
-            }
-        }
-
-        return $node;
-    }
-
+    /**
+     * Retrieve the list numeration type fo the given node.
+     */
     public function numeration(): string
     {
         if ($this->name !== 'orderedlist') {
@@ -226,17 +308,26 @@ class Node
         };
     }
 
+    /**
+     * Determine if the node objects to chunking.
+     */
     public function objectsToChunking(): bool
     {
         return isset($this->attributes[Manual::XMLNS_DOCBOOK]['annotations'])
             && str_contains($this->attributes[Manual::XMLNS_DOCBOOK]['annotations'], 'chunk:false');
     }
 
+    /**
+     * Retrieve the node's inner content.
+     */
     public function innerContent(): string
     {
         return $this->innerContentCache ??= ($this->innerContentResolver)();
     }
 
+    /**
+     * Determine if the node has the given attribute.
+     */
     public function hasAttribute(string $name): bool
     {
         foreach ($this->attributes as $namespace => $attributes) {
@@ -248,6 +339,9 @@ class Node
         return false;
     }
 
+    /**
+     * Determine if the node has any attributes.
+     */
     public function hasAnyAttributes(): bool
     {
         return $this->attributes !== [];
