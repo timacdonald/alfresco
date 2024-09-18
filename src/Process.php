@@ -11,14 +11,16 @@ use SplObjectStorage;
 class Process
 {
     /**
-     * The currently active stream.
+     * The active streams.
      *
      * @var SplObjectStorage<Generator, Stream>
      */
     protected SplObjectStorage $streams;
 
     /**
-     * Pending "closers" to run.
+     * Pending "closers" for each generator.
+     *
+     * @var SplObjectStorage<Generator, list<array{0: string, 1: Node}>>
      */
     protected SplObjectStorage $closers;
 
@@ -58,39 +60,26 @@ class Process
                     continue;
                 }
 
-                if ($node->isTextContent()) {
-                    $this->handleTextContent($generator, $node);
-
-                    continue;
-                }
-
                 if ($node->isClosingElement()) {
                     $this->handleClosingElement($generator, $node);
 
                     continue;
                 }
 
-                if ($node->isWhitespace()) {
-                    $this->handleWhitespace($generator, $node);
+                if (
+                    $node->isTextContent() ||
+                    $node->isCData() ||
+                    $node->isProcessingInstruction()
+                ) {
+                    $this->write($generator, $generator->render($node), $node);
 
                     continue;
                 }
 
-                if ($node->isCData()) {
-                    $this->handleCData($generator, $node);
-
-                    continue;
-                }
-
-                if ($node->isProcessingInstruction()) {
-                    $this->handleProcessingInstruction($generator, $node);
-
-                    continue;
-                }
-
-                if ($node->isComment()) {
-                    $this->handleComment($generator, $node);
-
+                if (
+                    $node->isWhitespace() ||
+                    $node->isComment()
+                ) {
                     continue;
                 }
 
@@ -134,46 +123,6 @@ class Process
         if ($this->matchesNextPendingCloser($generator, $node)) {
             $this->writeNextCloser($generator);
         }
-    }
-
-    /**
-     * Handle a whitespace node.
-     */
-    protected function handleWhitespace(Generator $generator, Node $node): void
-    {
-        //
-    }
-
-    /**
-     * Handle a CDATA node.
-     */
-    protected function handleCData(Generator $generator, Node $node): void
-    {
-        $this->write($generator, $generator->render($node), $node);
-    }
-
-    /**
-     * Handle a text node.
-     */
-    protected function handleTextContent(Generator $generator, Node $node): void
-    {
-        $this->write($generator, $generator->render($node), $node);
-    }
-
-    /**
-     * Handle a processing instruction node.
-     */
-    protected function handleProcessingInstruction(Generator $generator, Node $node): void
-    {
-        $this->write($generator, $generator->render($node), $node);
-    }
-
-    /**
-     * Handle a comment node.
-     */
-    protected function handleComment(Generator $generator, Node $node): void
-    {
-        //
     }
 
     /**
