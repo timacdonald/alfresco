@@ -2,6 +2,8 @@
 
 namespace Alfresco;
 
+use Alfresco\Support\Link;
+
 return fn (
     ComponentFactory $render,
     Link $link,

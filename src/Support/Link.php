@@ -1,6 +1,6 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Support;
 
 use Illuminate\Support\Str;
 

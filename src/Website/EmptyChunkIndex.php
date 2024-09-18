@@ -5,7 +5,7 @@ namespace Alfresco\Website;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\FileStreamFactory;
-use Alfresco\Node;
+use Alfresco\Manual\Node;
 use Alfresco\Stream;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;

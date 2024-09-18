@@ -4,6 +4,8 @@ namespace Alfresco;
 
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
+use Alfresco\Manual\Manual;
+use Alfresco\Manual\Node;
 use Closure;
 use RuntimeException;
 use SplObjectStorage;

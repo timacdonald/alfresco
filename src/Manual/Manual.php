@@ -1,6 +1,6 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Manual;
 
 use RuntimeException;
 use XMLReader;

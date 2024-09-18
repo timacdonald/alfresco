@@ -2,7 +2,7 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\Node;
+use Alfresco\Manual\Node;
 
 class Website
 {

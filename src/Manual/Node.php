@@ -1,7 +1,8 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Manual;
 
+use Alfresco\Support\Link;
 use Closure;
 use RuntimeException;
 use XMLReader;

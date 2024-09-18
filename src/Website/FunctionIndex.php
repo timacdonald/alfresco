@@ -6,7 +6,7 @@ use Alfresco\ComponentFactory;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\FileStreamFactory;
-use Alfresco\Node;
+use Alfresco\Manual\Node;
 use Alfresco\Stream;
 use Closure;
 use Illuminate\Config\Repository as Configuration;

@@ -3,7 +3,7 @@
 
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Manual;
-use Alfresco\ManualFactory;
+use Alfresco\Manual\Factory;
 use Alfresco\Output;
 use Alfresco\Process;
 use Illuminate\Config\Repository as Configuration;
@@ -91,7 +91,7 @@ $output->line('🍃 <🌈>Alfresco</🌈>');
  */
 
 [$factory, $process, $measure] = [
-    $container->make(ManualFactory::class),
+    $container->make(Factory::class),
     $container->make(Process::class),
     fn ($callback) => round(Benchmark::measure($callback) / 1000, 2), // @phpstan-ignore binaryOp.invalid
 ];

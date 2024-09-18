@@ -1,12 +1,13 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Manual;
 
+use Alfresco\Manual\Manual;
 use Illuminate\Config\Repository as Configuration;
 use PHPUnit\Event\RuntimeException;
 use XMLReader;
 
-class ManualFactory
+class Factory
 {
     /**
      * Create a new instance.
