@@ -2,10 +2,11 @@
 
 namespace Alfresco;
 
+use Alfresco\Render\Factory;
 use Alfresco\Support\Link;
 
 return fn (
-    ComponentFactory $render,
+    Factory $render,
     Link $link,
 ) => $render->tag(
     as: 'h3',

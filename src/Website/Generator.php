@@ -2,7 +2,7 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\ComponentFactory;
+use Alfresco\Render\Factory;
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Contracts\Generator as GeneratorContract;
 use Alfresco\Contracts\Slotable;
@@ -34,7 +34,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         protected Configuration $config,
         protected FileStreamFactory $streamFactory,
         protected Output $output,
-        protected ComponentFactory $render,
+        protected Factory $render,
         protected TitleIndex $titleIndex,
         protected EmptyChunkIndex $emptyChunkIndex,
         protected FunctionIndex $functionIndex,

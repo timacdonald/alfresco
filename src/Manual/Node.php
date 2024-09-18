@@ -10,11 +10,6 @@ use XMLReader;
 class Node
 {
     /**
-     * The inner content cache.
-     */
-    protected ?string $innerContentCache;
-
-    /**
      * Create a new instance.
      *
      * @param  array<string, array<string, string>>  $attributes
@@ -323,7 +318,7 @@ class Node
      */
     public function innerContent(): string
     {
-        return $this->innerContentCache ??= ($this->innerContentResolver)();
+        return once($this->innerContentResolver);
     }
 
     /**

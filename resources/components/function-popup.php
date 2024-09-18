@@ -2,6 +2,7 @@
 
 namespace Alfresco;
 
+use Alfresco\Render\Factory;
 use Alfresco\Website\Method;
 use Alfresco\Website\Parameter;
 use Illuminate\Support\Str;
@@ -9,7 +10,7 @@ use Illuminate\Support\Str;
 return function (
     string $id,
     Method $method,
-    ComponentFactory $render,
+    Factory $render,
 ) {
     $description = Str::of($method->description)->trim()->finish('.');
 

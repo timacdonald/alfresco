@@ -1,6 +1,6 @@
 <?php
 
-use Alfresco\ComponentFactory;
+use Alfresco\Render\Factory;
 use Alfresco\Translation;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
@@ -26,6 +26,6 @@ return tap(Container::getInstance(), function (Container $container) {
         $container->make(Configuration::class)->get('root_directory').'/theme.json'
     ));
 
-    $container->singleton(ComponentFactory::class);
+    $container->singleton(Factory::class);
     $container->singleton(Translation::class);
 });

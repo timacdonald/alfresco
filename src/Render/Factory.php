@@ -1,14 +1,20 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Render;
 
 use Alfresco\Contracts\Slotable;
+use Alfresco\Highlighter;
+use Alfresco\HtmlString;
+use Alfresco\HtmlTag;
+use Alfresco\Replacer;
+use Alfresco\Translation;
+use Alfresco\Wrapper;
 use Closure;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
 use Stringable;
 
-class ComponentFactory
+class Factory
 {
     /**
      * The component resolver cache.
@@ -30,13 +36,16 @@ class ComponentFactory
         //
     }
 
-    public function html(string $content)
+    /**
+     * Make a HTML string.
+     */
+    public function html(string $content): HtmlString
     {
         return new HtmlString($content);
     }
 
     /**
-     * Render a HTML tag.
+     * Make a HTML tag.
      *
      * @param  array<string, string|bool|array<int, string>>  $attributes
      */
@@ -51,7 +60,7 @@ class ComponentFactory
     }
 
     /**
-     * Render the given code snippet.
+     * Make a code snippet.
      */
     public function codeSnippet(string $snippet, string $language)
     {
@@ -62,7 +71,7 @@ class ComponentFactory
     }
 
     /**
-     * Render inline text.
+     * Make inline text.
      */
     public function inlineText(string $before = '', string $after = ''): Wrapper
     {
@@ -73,7 +82,7 @@ class ComponentFactory
     }
 
     /**
-     * Render a component wrapper.
+     * Make a wrapper.
      */
     public function wrapper(string|Stringable $before = '', string|Stringable $after = '', ?Slotable $slot = null): Wrapper
     {
@@ -81,7 +90,7 @@ class ComponentFactory
     }
 
     /**
-     * Render a component.
+     * Make a component.
      *
      * @param  array<string, mixed>  $data
      */

@@ -2,8 +2,10 @@
 
 namespace Alfresco;
 
+use Alfresco\Render\Factory;
+
 return fn (
-    ComponentFactory $render,
+    Factory $render,
 ) => $render->tag(
     as: 'p',
     attributes: [

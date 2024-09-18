@@ -2,7 +2,7 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\ComponentFactory;
+use Alfresco\Render\Factory;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\FileStreamFactory;
@@ -35,7 +35,7 @@ class FunctionIndex implements Generator
      * Create a new instance.
      */
     public function __construct(
-        protected ComponentFactory $render,
+        protected Factory $render,
         protected FileStreamFactory $streamFactory,
         protected Configuration $config
     ) {

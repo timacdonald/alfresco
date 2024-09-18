@@ -2,8 +2,10 @@
 
 namespace Alfresco;
 
+use Alfresco\Render\Factory;
+
 return fn (
-    ComponentFactory $render,
+    Factory $render,
     Translation $translation,
 ) => $render->wrapper(
     before: $render->inlineText($translation->get('editors.by')),

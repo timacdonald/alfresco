@@ -2,7 +2,7 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\ComponentFactory;
+use Alfresco\Render\Factory;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\FileStreamFactory;
@@ -37,7 +37,7 @@ class TitleIndex implements Generator
      */
     public function __construct(
         protected FileStreamFactory $streamFactory,
-        protected ComponentFactory $render,
+        protected Factory $render,
         protected Configuration $config,
     ) {
         $this->stream = $this->streamFactory->make(

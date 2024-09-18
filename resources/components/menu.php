@@ -2,11 +2,12 @@
 
 namespace Alfresco;
 
+use Alfresco\Render\Factory;
 use Alfresco\Website\Title;
 use Illuminate\Support\Collection;
 
 return fn (
-    ComponentFactory $render,
+    Factory $render,
     Collection $items,
     Title $active,
     Collection $empty,
