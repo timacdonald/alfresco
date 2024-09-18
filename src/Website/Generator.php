@@ -2,15 +2,12 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\Replacer;
 use Alfresco\ComponentFactory;
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Contracts\Generator as GeneratorContract;
 use Alfresco\Contracts\Slotable;
 use Alfresco\Date;
 use Alfresco\FileStreamFactory;
-use Alfresco\Highlighter;
-use Alfresco\HtmlTag;
 use Alfresco\Link;
 use Alfresco\Node;
 use Alfresco\Output;
@@ -18,7 +15,6 @@ use Alfresco\Stream;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 use RuntimeException;
 use Safe\DateTimeImmutable;
 
@@ -558,7 +554,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         return $this->render->tag(
             $node->hasParent('row.thead') ? 'th' : 'td',
             attributes: [
-                'class' => 'py-2 px-3 text-left first-of-type:pl-6 last:pr-6 tabular-nums'
+                'class' => 'py-2 px-3 text-left first-of-type:pl-6 last:pr-6 tabular-nums',
             ]
         );
     }
@@ -634,7 +630,6 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderFunction(Node $node): Slotable|string
     {
         $this->tooltipIndex++;
-
 
         // TODO handle when a function has multiple prototypes.
         $function = $this->functionIndex->all()[$node->innerContent()][0] ?? null;
@@ -1394,7 +1389,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderType(Node $node): Slotable|string
     {
         return $this->render->component('inline-code')->wrapSlot($this->render->component('link', [
-            'link' => Link::internal(match(strtolower($node->innerContent())) {
+            'link' => Link::internal(match (strtolower($node->innerContent())) {
                 'enum' => 'language.types.enumerations',
                 'int' => 'language.types.integer',
                 'bool' => 'language.types.boolean',
@@ -1412,7 +1407,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
                 'false' => 'reserved.constants#constant.false',
                 'true' => 'reserved.constants#constant.true',
                 'iterable' => 'language.types.iterable',
-            })
+            }),
         ]));
     }
 

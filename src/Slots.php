@@ -41,4 +41,3 @@ class Slots implements Slotable
         return $this->toString();
     }
 }
-
