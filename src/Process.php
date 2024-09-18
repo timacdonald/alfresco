@@ -51,7 +51,7 @@ class Process
 
             foreach ($generators as $generator) {
                 if ($iteration === 1) {
-                    $this->streams->attach($generator, $generator->stream($node));
+                    $this->streams[$generator] = $generator->stream($node);
                 }
 
                 if ($node->isOpeningElement()) {
@@ -109,7 +109,7 @@ class Process
 
             $this->streams[$generator]->close();
 
-            $this->streams->attach($generator, $generator->stream($node));
+            $this->streams[$generator] = $generator->stream($node);
         }
 
         $this->write($generator, $generator->render($node), $node);
