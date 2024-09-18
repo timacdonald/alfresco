@@ -42,7 +42,7 @@ class Process
             $this->closers[$generator] = [];
         }
 
-        while ($node = $manual->advance()) {
+        while ($node = $manual->read()) {
             if ($node->isDoctype()) {
                 continue;
             }

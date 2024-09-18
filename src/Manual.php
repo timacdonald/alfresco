@@ -7,21 +7,36 @@ use XMLReader;
 
 class Manual
 {
+    /**
+     * Docbook attribute namespace.
+     */
     public const XMLNS_DOCBOOK = 'http://docbook.org/ns/docbook';
 
-    public const XMLNS_PHD = 'http://www.php.net/ns/phd';
-
+    /**
+     * XLink attribute namespace.
+     */
     public const XMLNS_XLINK = 'http://www.w3.org/1999/xlink';
 
+    /**
+     * XML attribute namespace.
+     */
     public const XMLNS_XML = 'http://www.w3.org/XML/1998/namespace';
 
     /**
+     * The node's parent nodes.
+     *
      * @var array<int, Node>
      */
-    protected array $stack = [];
+    protected array $parents = [];
 
+    /**
+     * The current node's index.
+     */
     protected int $cursorIndex = -1;
 
+    /**
+     * The previous node's depth.
+     */
     protected int $lastDepth = -1;
 
     /**
@@ -33,7 +48,10 @@ class Manual
         //
     }
 
-    public function advance(): ?Node
+    /**
+     * Read the next node of the manual.
+     */
+    public function read(): ?Node
     {
         if (! $this->xml->read()) {
             $this->xml->close();
@@ -47,13 +65,12 @@ class Manual
 
         $this->lastDepth = $this->xml->depth;
 
-        return tap($this->node($this->cursorIndex, $previousSibling), function (Node $node) {
-            if ($this->xml->nodeType === XMLReader::ELEMENT) {
-                $this->stack[$this->xml->depth] = $node;
-            }
-        });
+        return tap($this->node($this->cursorIndex, $previousSibling), $this->rememberNode(...));
     }
 
+    /**
+     * The current node instance.
+     */
     protected function node(int $index, ?string $previousSibling): Node
     {
         return new Node(
@@ -66,7 +83,7 @@ class Manual
             isSelfClosing: $this->xml->isEmptyElement,
             attributes: $this->attributes(),
             previousSibling: $previousSibling,
-            parent: $this->stack[$this->xml->depth - 1] ?? null,
+            parent: $this->parents[$this->xml->depth - 1] ?? null,
             innerContentResolver: function () use ($index) {
                 if ($index !== $this->cursorIndex) {
                     throw new RuntimeException('Unable to read the XML contents as the cursor has moved past the current node.');
@@ -77,14 +94,29 @@ class Manual
         );
     }
 
+    /**
+     * Remember node for use as a parent.
+     */
+    protected function rememberNode(Node $node): void
+    {
+        if ($this->xml->nodeType === XMLReader::ELEMENT) {
+            $this->parents[$this->xml->depth] = $node;
+        }
+    }
+
+    /**
+     * The current node's previous sibling tag name.
+     */
     protected function previousSibling(): ?string
     {
         return $this->lastDepth >= $this->xml->depth
-            ? $this->stack[$this->xml->depth]->name ?? null
+            ? $this->parents[$this->xml->depth]->name ?? null
             : null;
     }
 
     /**
+     * The attributes for the current node.
+     *
      * @return array<string, array<string, string>>
      */
     protected function attributes(): array
@@ -101,6 +133,6 @@ class Manual
             $this->xml->moveToElement();
         }
 
-        return $attributes;
+        return $attributes; // @phpstan-ignore return.type
     }
 }
