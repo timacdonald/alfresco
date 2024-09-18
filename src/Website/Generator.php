@@ -635,6 +635,15 @@ class Generator implements DependsOnIndexes, GeneratorContract
     {
         $this->tooltipIndex++;
 
+
+        // TODO handle when a function has multiple prototypes.
+        $function = $this->functionIndex->all()[$node->innerContent()][0] ?? null;
+
+        // We can't actually do this. Just a step along the way...
+        if ($function === null) {
+            return '';
+        }
+
         return $this->render->wrapper(
             slot: $this->render->component('inline-code', [
                 'attributes' => [
@@ -643,41 +652,24 @@ class Generator implements DependsOnIndexes, GeneratorContract
                 ]])
                 ->wrapSlot($this->render->wrapper(
                     slot: $this->render->component('link', [
-                        'link' => Link::internal("function.{$node->innerContent()}"),
+                        'link' => Link::internal("function.{$function->name}"),
                     ]),
                     after: $this->render->tag(
                         as: 'button',
-                        before: new HtmlString(<<<'HTML'
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-rose-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M9 17c2 0 2.8-1 2.8-2.8V10c0-2 1-3.3 3.2-3"/><path d="M9 11.2h5.7"/></svg>
-                            HTML),
-                        after: $this->render->tag(
-                            as: 'div',
-                            attributes: [
-                                'id' => "tooltip-{$this->tooltipIndex}",
-                                'role' => 'tooltip',
-                            ],
-                            after: new HtmlString(<<<'HTML'
-                            <div class="text-slate-600 text-left">
-                            <pre class="text-slate-400">
-                            /**
-                             * Output one or more strings.
-                             *
-                             * @since 4.0
-                             */
-                            </pre>
-                            <span class="text-blue-600">echo</span>(<span class="text-fuchsia-600">string</span> ...<span class="text-rose-600">$expressions</span>): <span class="text-purple-600">void</span>
-                            </div>
-                            HTML)
-                        ),
                         attributes: [
                             'tooltip-target' => "tooltip-{$this->tooltipIndex}",
                             'class' => 'flex items-center justify-center ml-2 h-full w-6 border-l border-violet-100 absolute right-0 top-0 rounded-r',
-                        ]
+                        ],
+                        before: new HtmlString(<<<'HTML'
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-rose-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M9 17c2 0 2.8-1 2.8-2.8V10c0-2 1-3.3 3.2-3"/><path d="M9 11.2h5.7"/></svg>
+                            HTML),
+                        after: $this->render->component('function-popup', [
+                            'id' => "tooltip-{$this->tooltipIndex}",
+                            'method' => $function,
+                        ]),
                     ),
                 )),
         );
-
-        $first = false;
     }
 
     /**

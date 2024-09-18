@@ -29,6 +29,8 @@ class FunctionIndex implements Generator
 
     protected $paramNumber = 1;
 
+    protected ?string $description = null;
+
     /**
      * Create a new instance.
      */
@@ -52,6 +54,7 @@ class FunctionIndex implements Generator
             <?php
 
             use Alfresco\Website\Method;
+            use Alfresco\Website\Parameter;
 
             return [
 
@@ -79,9 +82,13 @@ class FunctionIndex implements Generator
      */
     public function render(Node $node): string|Slotable
     {
+        if ($node->name === 'refpurpose') {
+            $this->description = $node->innerContent();
+        }
+
         if ($node->name === 'methodsynopsis' && $node->parent('refsect1')) {
-            return $this->render->wrapper(
-                before: 'new Method(',
+            $wrapper = $this->render->wrapper(
+                before: 'new Method(description:'.var_export($this->description, true).',',
                 after: new class(fn () => ($this->paramNumber = 1)) implements Stringable
                 {
                     public function __construct(private Closure $callback)
@@ -97,12 +104,16 @@ class FunctionIndex implements Generator
                     }
                 },
             );
+
+            $this->description = null;
+
+            return $wrapper;
         }
 
         if ($node->name === 'methodparam' && $node->parent('methodsynopsis.refsect1')) {
             return $this->render->wrapper(
-                before: 'p'.($this->paramNumber++).':[',
-                after: '],',
+                before: 'p'.($this->paramNumber++).':new Parameter([',
+                after: '),',
             );
         }
 
@@ -122,7 +133,10 @@ class FunctionIndex implements Generator
             $node->name === 'type' &&
             $node->parent('methodsynopsis.refsect1')
         ) {
-            return 'return:';
+            return $this->render->wrapper(
+                before: 'return:[',
+                after: '],',
+            );
         }
 
         if (
@@ -155,7 +169,7 @@ class FunctionIndex implements Generator
 
             // param name
             if ($node->parent('parameter.methodparam.methodsynopsis.refsect1')) {
-                return $node->exportValue().',';
+                return '],'.$node->exportValue();
             }
         }
 
@@ -177,6 +191,14 @@ class FunctionIndex implements Generator
      */
     public function all(): Collection
     {
-        return $this->allCache ??= collect(require_once $this->stream->path);
+        return $this->allCache ??= collect(require_once $this->stream->path)
+            ->reduce(function ($carry, $function) {
+                $carry[$function->name] = collect([
+                    ...($carry[$function->name] ?? []),
+                    $function,
+                ]);
+
+                return $carry;
+            }, collect([]));
     }
 }

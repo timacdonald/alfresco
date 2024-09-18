@@ -6,7 +6,6 @@ use Alfresco\Manual;
 use Alfresco\ManualFactory;
 use Alfresco\Output;
 use Alfresco\Process;
-use Alfresco\Website\FunctionIndex;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
 use Illuminate\Support\Benchmark;

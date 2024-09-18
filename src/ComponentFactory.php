@@ -30,6 +30,11 @@ class ComponentFactory
         //
     }
 
+    public function html(string $content)
+    {
+        return new HtmlString($content);
+    }
+
     /**
      * Render a HTML tag.
      *
