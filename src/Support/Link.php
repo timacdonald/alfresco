@@ -6,16 +6,25 @@ use Illuminate\Support\Str;
 
 class Link
 {
+    /**
+     * Create a link to an internal location.
+     */
     public static function internal(string $destination): Link
     {
         return new Link($destination, true);
     }
 
+    /**
+     * Create a link to an extenal location.
+     */
     public static function external(string $destination): Link
     {
         return new Link($destination, false);
     }
 
+    /**
+     * Create a link to a fragment on the current page.
+     */
     public static function fragment(string $destination): Link
     {
         return new Link('#'.Str::slug(strip_tags($destination)), true);
@@ -31,6 +40,9 @@ class Link
         //
     }
 
+    /**
+     * Retrieve the destination without the fragment.
+     */
     public function destinationWithoutFragmentHash(): string
     {
         return Str::after($this->destination, '#');
