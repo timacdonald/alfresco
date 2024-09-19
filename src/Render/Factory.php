@@ -62,7 +62,7 @@ class Factory
     /**
      * Make a code snippet.
      */
-    public function codeSnippet(string $snippet, string $language)
+    public function codeSnippet(string $snippet, string $language): string
     {
         return array_reduce([
             $this->replacer->handle(...),
