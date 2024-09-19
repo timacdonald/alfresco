@@ -28,15 +28,21 @@ const showTooltip = (tooltip, button) => {
     tooltip.style.display = 'block'
     updateTooltip(tooltip, button);
     tooltip.classList.add('active')
+    window.clearTimeout(hoverOutTimeouts.find((v) => v.button === button).timeoutId)
 }
 
-const hideTooltip = (tooltip) => {
+const hideTooltip = (tooltip, button) => {
     tooltip.classList.remove('active')
 
-    window.setTimeout(() => {
+    hoverOutTimeouts.find((v) => v.button === button).timeoutId = window.setTimeout(() => {
         tooltip.style.display = 'none'
     }, 200)
 }
+
+
+const buttons = document.querySelectorAll('button[tooltip-target]')
+const hoverOutTimeouts = [];
+buttons.forEach((button) => hoverOutTimeouts.push({ button, timeoutId: null }));
 
 [
   ['mouseenter', showTooltip],
@@ -44,7 +50,7 @@ const hideTooltip = (tooltip) => {
   ['focus', showTooltip],
   ['blur', hideTooltip],
 ].forEach(([event, listener]) => {
-    document.querySelectorAll('button[tooltip-target]').forEach((button) => {
+    buttons.forEach((button) => {
         const tooltip = document.getElementById(button.getAttribute('tooltip-target'))
 
         button.addEventListener(event, () => listener(tooltip, button));
