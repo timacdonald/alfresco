@@ -4,11 +4,11 @@ namespace Alfresco\Render;
 
 use Alfresco\Contracts\Slotable;
 use Alfresco\Highlighter;
-use Alfresco\HtmlString;
-use Alfresco\HtmlTag;
+use Alfresco\Render\HtmlString;
+use Alfresco\Render\HtmlTag;
 use Alfresco\Replacer;
 use Alfresco\Translation;
-use Alfresco\Wrapper;
+use Alfresco\Render\Wrapper;
 use Closure;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;

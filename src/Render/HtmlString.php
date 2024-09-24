@@ -1,6 +1,6 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Render;
 
 use Alfresco\Contracts\Slotable;
 use Stringable;
@@ -33,7 +33,7 @@ class HtmlString implements Slotable
     }
 
     /**
-     * The HTML string.
+     * Convert to a string.
      */
     public function toString(): string
     {

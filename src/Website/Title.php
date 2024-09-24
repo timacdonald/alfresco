@@ -2,7 +2,7 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\HtmlString;
+use Alfresco\Render\HtmlString;
 use Illuminate\Support\Collection;
 
 class Title

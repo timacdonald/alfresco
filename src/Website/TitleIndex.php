@@ -6,7 +6,7 @@ use Alfresco\Render\Factory;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\FileStreamFactory;
-use Alfresco\HtmlString;
+use Alfresco\Render\HtmlString;
 use Alfresco\Manual\Node;
 use Alfresco\Stream;
 use Illuminate\Config\Repository as Configuration;

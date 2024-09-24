@@ -1,6 +1,6 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Render;
 
 use Alfresco\Contracts\Slotable;
 use RuntimeException;
@@ -23,6 +23,9 @@ class HtmlTag implements Slotable
         //
     }
 
+    /**
+     * Retrieve the "before" content.
+     */
     public function before(): string
     {
         if ($this->isVoidTag()) {
@@ -32,6 +35,9 @@ class HtmlTag implements Slotable
         return "<{$this->as}{$this->attributeList()}>{$this->before}{$this->slot?->before()}";
     }
 
+    /**
+     * Retrieve the "after" content.
+     */
     public function after(): string
     {
         if ($this->isVoidTag()) {
@@ -41,6 +47,9 @@ class HtmlTag implements Slotable
         return "{$this->slot?->after()}{$this->after}</{$this->as}>";
     }
 
+    /**
+     * Retrieve the tags attribute list.
+     */
     protected function attributeList(): string
     {
         return with($this->attributes(), fn (array $attributes) => $attributes === []
@@ -49,6 +58,8 @@ class HtmlTag implements Slotable
     }
 
     /**
+     * Retrieve the tags attributes.
+     *
      * @return array<int, string>
      */
     protected function attributes(): array
@@ -78,6 +89,73 @@ class HtmlTag implements Slotable
         return array_values($attributes);
     }
 
+    /**
+     * Attach the given attributes.
+     *
+     * @param  array<string, string|bool|array<int, string>>  $attributes
+     */
+    public function withAttributes(array $attributes): HtmlTag
+    {
+        return new HtmlTag(
+            as: $this->as,
+            attributes: array_merge_recursive($this->attributes, $attributes),
+            before: $this->before,
+            after: $this->after,
+            slot: $this->slot,
+        );
+    }
+
+    /**
+     * Wrap the given slot.
+     */
+    public function wrapSlot(Slotable $slot): HtmlTag
+    {
+        return new HtmlTag(
+            as: $this->as,
+            attributes: $this->attributes,
+            before: $this->before,
+            after: $this->after,
+            slot: $slot,
+        );
+    }
+
+    /**
+     * Change the HTML tag.
+     */
+    public function as(string $as): HtmlTag
+    {
+        return new HtmlTag(
+            as: $as,
+            attributes: $this->attributes,
+            before: $this->before,
+            after: $this->after,
+            slot: $this->slot,
+        );
+    }
+
+    /**
+     * Convert to a string.
+     */
+    public function toString(): string
+    {
+        if ($this->slot !== null) {
+            throw new RuntimeException('Unable to render a tag with a content wrapper.');
+        }
+
+        return $this->before().$this->after();
+    }
+
+    /**
+     * Convert to a string.
+     */
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * Determine if the tag is considered a void tag that does not need closing.
+     */
     protected function isVoidTag(): bool
     {
         return in_array($this->as, [
@@ -95,55 +173,5 @@ class HtmlTag implements Slotable
             'track',
             'wbr',
         ]);
-    }
-
-    /**
-     * @param  array<string, string|bool|array<int, string>>  $attributes
-     */
-    public function withAttributes(array $attributes): HtmlTag
-    {
-        return new HtmlTag(
-            as: $this->as,
-            attributes: array_merge_recursive($this->attributes, $attributes),
-            before: $this->before,
-            after: $this->after,
-            slot: $this->slot,
-        );
-    }
-
-    public function wrapSlot(Slotable $slot): HtmlTag
-    {
-        return new HtmlTag(
-            as: $this->as,
-            attributes: $this->attributes,
-            before: $this->before,
-            after: $this->after,
-            slot: $slot,
-        );
-    }
-
-    public function as(string $as): HtmlTag
-    {
-        return new HtmlTag(
-            as: $as,
-            attributes: $this->attributes,
-            before: $this->before,
-            after: $this->after,
-            slot: $this->slot,
-        );
-    }
-
-    public function toString(): string
-    {
-        if ($this->slot !== null) {
-            throw new RuntimeException('Unable to render a tag with a content wrapper.');
-        }
-
-        return $this->before().$this->after();
-    }
-
-    public function __toString(): string
-    {
-        return $this->toString();
     }
 }
