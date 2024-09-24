@@ -35,8 +35,10 @@ return tap(Container::getInstance(), function (Container $container) {
         $container->make(Configuration::class)->get('translation_directory'),
     ));
 
-    $container->singleton(Translator::class, fn (Container $container) => new Translator(
+    $container->singleton(Translator::class, fn (Container $container) => (new Translator(
         $container->make(FileLoader::class),
         'en',
-    ));
+    ))->handleMissingKeysUsing(function ($key, $replace, $locale, $fallback) {
+        throw new RuntimeException("Missing translation [{$key}] for locale [{$locale}].");
+    }));
 });
