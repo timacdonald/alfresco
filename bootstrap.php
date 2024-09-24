@@ -1,11 +1,11 @@
 <?php
 
 use Alfresco\Render\Factory;
+use Alfresco\Support\Translator;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader;
-use Illuminate\Translation\Translator;
 use Spatie\ShikiPhp\Shiki;
 
 return tap(Container::getInstance(), function (Container $container) {

@@ -2,7 +2,7 @@
 
 namespace Alfresco;
 
-use Illuminate\Translation\Translator;
+use Alfresco\Support\Translator;
 
 return fn (
     Translator $translator,

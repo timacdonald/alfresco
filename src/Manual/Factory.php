@@ -30,10 +30,12 @@ class Factory
      */
     protected function reader(string $path): XMLReader
     {
-        return tap(XMLReader::open($path, 'UTF-8'), function ($reader) {
-            if ($reader === false) {
-                throw new RuntimeException('Unable to create XML reader.');
-            }
-        });
+        $reader = XMLReader::open($path, 'UTF-8');
+
+        if ($reader === false) {
+            throw new RuntimeException('Unable to create XML reader.');
+        }
+
+        return $reader;
     }
 }

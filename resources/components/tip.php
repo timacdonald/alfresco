@@ -3,7 +3,7 @@
 namespace Alfresco;
 
 use Alfresco\Render\Factory;
-use Illuminate\Translation\Translator;
+use Alfresco\Support\Translator;
 
 return fn (
     Factory $render,

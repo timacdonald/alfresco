@@ -2,7 +2,6 @@
 
 namespace Alfresco\Stream;
 
-use Alfresco\Stream\State;
 use Closure;
 use RuntimeException;
 
