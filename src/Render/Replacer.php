@@ -1,6 +1,6 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Render;
 
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
@@ -13,6 +13,8 @@ class Replacer
 {
     /**
      * The cache of already highlighted files.
+     *
+     * @var Collection<int, string>
      */
     protected Collection $filesCache;
 
@@ -21,7 +23,6 @@ class Replacer
      */
     public function __construct(
         protected Configuration $config,
-        protected Output $output,
         protected Finder $finder,
     ) {
         //
@@ -69,6 +70,11 @@ class Replacer
         return hash('xxh128', "{$language}\n{$code}");
     }
 
+    /**
+     * Retrieve the replacement and original files.
+     *
+     * @return Collection<int, string>
+     */
     protected function files(): Collection
     {
         return $this->filesCache ??= collect($this->finder

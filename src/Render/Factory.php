@@ -6,7 +6,7 @@ use Alfresco\Contracts\Slotable;
 use Alfresco\Highlighter;
 use Alfresco\Render\HtmlString;
 use Alfresco\Render\HtmlTag;
-use Alfresco\Replacer;
+use Alfresco\Render\Replacer;
 use Alfresco\Translation;
 use Alfresco\Render\Wrapper;
 use Closure;
