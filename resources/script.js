@@ -25,10 +25,15 @@ const updateTooltip = (tooltip, button) => computePosition(button, tooltip, {
 });
 
 const showTooltip = (tooltip, button) => {
+    tooltip.style['transition-delay'] = '200ms'
     tooltip.style.display = 'block'
     updateTooltip(tooltip, button);
     tooltip.classList.add('active')
-    window.clearTimeout(hoverOutTimeouts.find((v) => v.button === button).timeoutId)
+    hoverOutTimeouts
+        .filter((v) => v.button === button)
+        .forEach((hoverOutTimeout) => window.clearTimeout(hoverOutTimeout.timeoutId))
+
+    hoverOutTimeouts.push({ button, timeoutId: setTimeout(() => tooltip.style['transition-delay'] = '0ms', 200)})
 }
 
 const hideTooltip = (tooltip, button) => {
@@ -36,6 +41,7 @@ const hideTooltip = (tooltip, button) => {
 
     hoverOutTimeouts.find((v) => v.button === button).timeoutId = window.setTimeout(() => {
         tooltip.style.display = 'none'
+        tooltip.style['transition-delay'] = '0ms'
     }, 200)
 }
 

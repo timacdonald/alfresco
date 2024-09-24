@@ -32,26 +32,25 @@
 div[role="tooltip"] {
     display: none;
     opacity: 0;
-    transform: scale(0.75) translateY(16px);
-    transform-origin: bottom;
+    transform: scale(0.8) translateY(-1.5rem);
     width: max-content;
     position: absolute;
     top: 0;
     left: 0;
-    background: white;
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.8);
     color: theme('colors.slate.800');
     font-family: theme('fontFamily.mono');
     padding: 12px;
     box-shadow: theme('boxShadow.xl');
     border-radius: 8px;
-    border: 1px solid theme('colors.violet.100');
     font-size: 0.875rem;
     transition-property: opacity, transform;
-    transition-duration: 0.2s;
+    transition-duration: 200ms;
     transition-timing-function: ease-out;
 }
 
 div[role="tooltip"].active {
-    transform: scale(1);
+    transform: scale(1) translateY(0px);
     opacity: 1;
 }

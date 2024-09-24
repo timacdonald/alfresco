@@ -653,10 +653,15 @@ class Generator implements DependsOnIndexes, GeneratorContract
                         as: 'button',
                         attributes: [
                             'tooltip-target' => "tooltip-{$this->tooltipIndex}",
-                            'class' => 'flex items-center justify-center ml-2 h-full w-6 border-l border-violet-100 absolute right-0 top-0 rounded-r',
+                            'class' => 'flex items-center justify-center ml-2 h-full w-6 border-l border-violet-200 absolute right-0 top-0 rounded-r',
                         ],
                         before: new HtmlString(<<<'HTML'
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-rose-500"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M9 17c2 0 2.8-1 2.8-2.8V10c0-2 1-3.3 3.2-3"/><path d="M9 11.2h5.7"/></svg>
+                            <!-- TODO replace this icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-rose-500">
+                            <!--<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>-->
+                            <path d="M9 17c2 0 2.8-1 2.8-2.8V10c0-2 1-3.3 3.2-3"/>
+                            <path d="M9 11.2h5.7"/>
+                            </svg>
                             HTML),
                         after: $this->render->component('function-popup', [
                             'id' => "tooltip-{$this->tooltipIndex}",
