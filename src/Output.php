@@ -6,10 +6,19 @@ use Illuminate\Support\Stringable;
 
 class Output
 {
+    /**
+     * The index in the rainbox.
+     */
     protected int $rainboxIndex = 50;
 
+    /**
+     * Indicates a line has been written.
+     */
     protected bool $lineWritten = true;
 
+    /**
+     * Write the given string.
+     */
     public function write(string $message): Output
     {
         $this->lineWritten = false;
@@ -57,6 +66,9 @@ class Output
         return $this;
     }
 
+    /**
+     * Write the given line.
+     */
     public function line(string $message = ''): Output
     {
         if (! $this->lineWritten) {
@@ -71,6 +83,8 @@ class Output
     }
 
     /**
+     * Convert to rainbow output.
+     *
      * @source https://github.com/busyloop/lolcat
      */
     protected function 🌈(string $message, float $frequency): string

@@ -2,7 +2,7 @@
 
 namespace Alfresco\Stream;
 
-use Alfresco\StreamState;
+use Alfresco\Stream\State;
 use Closure;
 use RuntimeException;
 
@@ -11,7 +11,7 @@ class Stream
     /**
      * The strem's state.
      */
-    protected StreamState $state = StreamState::Unopened;
+    protected State $state = State::Unopened;
 
     /**
      * The write handler.
@@ -38,14 +38,14 @@ class Stream
      */
     public function write(string $content): static
     {
-        if ($this->state === StreamState::Closed) {
+        if ($this->state === State::Closed) {
             throw new RuntimeException('Unable to write. Stream is closed.');
         }
 
-        if ($this->state === StreamState::Unopened) {
+        if ($this->state === State::Unopened) {
             [$this->write, $this->close] = ($this->open)($this->path);
 
-            $this->state = StreamState::Open;
+            $this->state = State::Open;
         }
 
         assert($this->write !== null);
@@ -60,11 +60,11 @@ class Stream
      */
     public function close(): void
     {
-        if ($this->state === StreamState::Closed) {
+        if ($this->state === State::Closed) {
             throw new RuntimeException('Stream has already been closed.');
         }
 
-        if ($this->state === StreamState::Open) {
+        if ($this->state === State::Open) {
             assert($this->close !== null);
 
             ($this->close)();
@@ -72,6 +72,6 @@ class Stream
             $this->write = $this->close = null;
         }
 
-        $this->state = StreamState::Closed;
+        $this->state = State::Closed;
     }
 }

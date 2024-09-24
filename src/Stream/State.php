@@ -1,8 +1,8 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Stream;
 
-enum StreamState
+enum State
 {
     case Unopened;
     case Open;

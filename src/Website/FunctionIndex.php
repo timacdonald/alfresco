@@ -91,7 +91,7 @@ class FunctionIndex implements Generator
                 before: 'new Method(description:'.var_export($this->description, true).',',
                 after: new class(fn () => ($this->paramNumber = 1)) implements Stringable
                 {
-                    public function __construct(private Closure $callback)
+                    public function __construct(protected Closure $callback)
                     {
                         //
                     }
