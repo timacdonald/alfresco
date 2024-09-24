@@ -6,15 +6,22 @@ use Illuminate\Support\Collection;
 
 class Method
 {
-    protected Collection $parameters;
+    /**
+     * The method paraameters.
+     *
+     * @var Collection<int, Parameter|null>
+     */
+    protected Collection $parametersCache;
 
     /**
      * Create a new instance.
+     *
+     * @param  list<string>  $return
      */
     public function __construct(
         public ?string $description,
         public string $name,
-        public array $return = [],
+        protected array $return = [],
         public ?Parameter $p1 = null,
         public ?Parameter $p2 = null,
         public ?Parameter $p3 = null,
@@ -39,14 +46,24 @@ class Method
         $this->description = $this->description ?? '';
     }
 
+    /**
+     * Retrieve the return types.
+     *
+     * @return Collection<int, string>
+     */
     public function returnTypes(): Collection
     {
         return collect($this->return);
     }
 
+    /**
+     * Retrieve the parameters.
+     *
+     * @return Collection<int, Parameter>
+     */
     public function parameters(): Collection
     {
-        return $this->parameters ??= collect([
+        return $this->parametersCache ??= collect([
             $this->p1,
             $this->p2,
             $this->p3,
