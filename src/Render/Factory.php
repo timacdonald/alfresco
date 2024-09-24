@@ -3,7 +3,6 @@
 namespace Alfresco\Render;
 
 use Alfresco\Contracts\Slotable;
-use Alfresco\Translation;
 use Closure;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
@@ -23,10 +22,9 @@ class Factory
      */
     public function __construct(
         protected Configuration $config,
-        protected Translation $translation,
-        protected Container $container,
         protected Highlighter $highlighter,
         protected Replacer $replacer,
+        protected Container $container,
     ) {
         //
     }

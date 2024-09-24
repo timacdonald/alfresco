@@ -3,10 +3,11 @@
 namespace Alfresco;
 
 use Alfresco\Render\Factory;
+use Illuminate\Translation\Translator;
 
 return fn (
     Factory $render,
-    Translation $translation,
+    Translator $translator,
 ) => $render->tag(
     as: 'div',
     attributes: [
@@ -15,7 +16,7 @@ return fn (
     ],
     before: $render->tag(
         as: 'strong',
-        before: $translation->get('warning.badge'),
+        before: $translator->get('ui.warning.badge'),
         attributes: [
             'class' => 'absolute inline-block right-3 -top-3 rounded bg-red-200 leading-none py-1 px-2 text-sm font-semibold font-mono uppercase',
         ],

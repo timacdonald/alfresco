@@ -8,6 +8,8 @@ use Alfresco\Manual\Manual;
 use Alfresco\Manual\Node;
 use Alfresco\Stream\Stream;
 use Closure;
+use Illuminate\Container\Container;
+use Illuminate\Translation\Translator;
 use RuntimeException;
 use SplObjectStorage;
 
@@ -34,6 +36,7 @@ class Process
      */
     public function handle(Manual $manual, iterable $generators, ?Closure $onTick = null): void
     {
+        dd(Container::getInstance()->make(Translator::class)->get('ui.authors.by'));
         $this->streams = new SplObjectStorage;
         $this->closers = new SplObjectStorage;
 

@@ -1,9 +1,11 @@
 <?php
 
 use Alfresco\Render\Factory;
-use Alfresco\Translation;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Translation\FileLoader;
+use Illuminate\Translation\Translator;
 use Spatie\ShikiPhp\Shiki;
 
 return tap(Container::getInstance(), function (Container $container) {
@@ -22,10 +24,19 @@ return tap(Container::getInstance(), function (Container $container) {
         'replacements_directory' => __DIR__.'/resources/replacements',
     ]));
 
+    $container->singleton(Factory::class);
+
     $container->bind(Shiki::class, fn (Container $container) => new Shiki(
         $container->make(Configuration::class)->get('root_directory').'/theme.json'
     ));
 
-    $container->singleton(Factory::class);
-    $container->singleton(Translation::class);
+    $container->bind(FileLoader::class, fn (Container $container) => new FileLoader(
+        $container->make(Filesystem::class),
+        $container->make(Configuration::class)->get('translation_directory'),
+    ));
+
+    $container->singleton(Translator::class, fn (Container $container) => new Translator(
+        $container->make(FileLoader::class),
+        'en',
+    ));
 });

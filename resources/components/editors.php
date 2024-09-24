@@ -3,11 +3,12 @@
 namespace Alfresco;
 
 use Alfresco\Render\Factory;
+use Illuminate\Translation\Translator;
 
 return fn (
     Factory $render,
-    Translation $translation,
+    Translator $translator,
 ) => $render->wrapper(
-    before: $render->inlineText($translation->get('editors.by')),
+    before: $render->inlineText($translator->get('ui.editors.by')),
     after: '.'
 );
