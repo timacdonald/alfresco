@@ -3,7 +3,7 @@
 namespace Alfresco\Render;
 
 use Alfresco\Contracts\Slotable;
-use Alfresco\Highlighter;
+use Alfresco\Render\Highlighter;
 use Alfresco\Render\HtmlString;
 use Alfresco\Render\HtmlTag;
 use Alfresco\Render\Replacer;

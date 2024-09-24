@@ -1,6 +1,6 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Render;
 
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
@@ -14,6 +14,8 @@ class Highlighter
 {
     /**
      * The cache of already highlighted files.
+     *
+     * @var Collection<int, string>
      */
     protected Collection $filesCache;
 
@@ -61,6 +63,11 @@ class Highlighter
         return hash('xxh128', "{$language}\n{$code}");
     }
 
+    /**
+     * The cached highlighted files.
+     *
+     * @return Collection<int, string>
+     */
     protected function files(): Collection
     {
         return $this->filesCache ??= collect($this->finder

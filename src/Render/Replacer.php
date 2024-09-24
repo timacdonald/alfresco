@@ -12,7 +12,7 @@ use function Safe\file_put_contents;
 class Replacer
 {
     /**
-     * The cache of already highlighted files.
+     * The cached replacement and original files.
      *
      * @var Collection<int, string>
      */
@@ -71,7 +71,7 @@ class Replacer
     }
 
     /**
-     * Retrieve the replacement and original files.
+     * The cached replacement and original files.
      *
      * @return Collection<int, string>
      */
