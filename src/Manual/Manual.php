@@ -25,7 +25,7 @@ class Manual
     /**
      * The node's parent nodes.
      *
-     * @var array<int, Node>
+     * @var list<Node>
      */
     protected array $parents = [];
 

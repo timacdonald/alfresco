@@ -2,16 +2,16 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\Render\Factory;
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Contracts\Generator as GeneratorContract;
 use Alfresco\Contracts\Slotable;
 use Alfresco\Date;
-use Alfresco\FileStreamFactory;
-use Alfresco\Support\Link;
 use Alfresco\Manual\Node;
 use Alfresco\Output;
-use Alfresco\Stream;
+use Alfresco\Render\Factory;
+use Alfresco\Stream\FileStreamFactory;
+use Alfresco\Stream\Stream;
+use Alfresco\Support\Link;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;

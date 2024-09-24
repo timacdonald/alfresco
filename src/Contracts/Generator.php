@@ -3,7 +3,7 @@
 namespace Alfresco\Contracts;
 
 use Alfresco\Manual\Node;
-use Alfresco\Stream;
+use Alfresco\Stream\Stream;
 
 interface Generator
 {

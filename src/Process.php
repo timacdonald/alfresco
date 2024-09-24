@@ -6,6 +6,7 @@ use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\Manual\Manual;
 use Alfresco\Manual\Node;
+use Alfresco\Stream\Stream;
 use Closure;
 use RuntimeException;
 use SplObjectStorage;

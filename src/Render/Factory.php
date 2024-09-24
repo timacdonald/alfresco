@@ -3,12 +3,7 @@
 namespace Alfresco\Render;
 
 use Alfresco\Contracts\Slotable;
-use Alfresco\Render\Highlighter;
-use Alfresco\Render\HtmlString;
-use Alfresco\Render\HtmlTag;
-use Alfresco\Render\Replacer;
 use Alfresco\Translation;
-use Alfresco\Render\Wrapper;
 use Closure;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
@@ -47,7 +42,7 @@ class Factory
     /**
      * Make a HTML tag.
      *
-     * @param  array<string, string|bool|array<int, string>>  $attributes
+     * @param  array<string, string|bool|list<string>>  $attributes
      */
     public function tag(
         string $as,

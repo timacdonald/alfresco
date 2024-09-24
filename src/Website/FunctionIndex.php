@@ -2,12 +2,12 @@
 
 namespace Alfresco\Website;
 
-use Alfresco\Render\Factory;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
-use Alfresco\FileStreamFactory;
 use Alfresco\Manual\Node;
-use Alfresco\Stream;
+use Alfresco\Render\Factory;
+use Alfresco\Stream\FileStreamFactory;
+use Alfresco\Stream\Stream;
 use Closure;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;

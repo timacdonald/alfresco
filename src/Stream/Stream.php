@@ -1,16 +1,26 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Stream;
 
+use Alfresco\StreamState;
 use Closure;
 use RuntimeException;
 
 class Stream
 {
+    /**
+     * The strem's state.
+     */
     protected StreamState $state = StreamState::Unopened;
 
+    /**
+     * The write handler.
+     */
     protected ?Closure $write;
 
+    /**
+     * The close handler.
+     */
     protected ?Closure $close;
 
     /**
@@ -23,6 +33,9 @@ class Stream
         //
     }
 
+    /**
+     * Write the the stream.
+     */
     public function write(string $content): static
     {
         if ($this->state === StreamState::Closed) {
@@ -35,11 +48,16 @@ class Stream
             $this->state = StreamState::Open;
         }
 
+        assert($this->write !== null);
+
         ($this->write)($content);
 
         return $this;
     }
 
+    /**
+     * Close the stream.
+     */
     public function close(): void
     {
         if ($this->state === StreamState::Closed) {
@@ -47,6 +65,8 @@ class Stream
         }
 
         if ($this->state === StreamState::Open) {
+            assert($this->close !== null);
+
             ($this->close)();
 
             $this->write = $this->close = null;

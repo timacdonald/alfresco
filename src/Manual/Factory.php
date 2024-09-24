@@ -2,7 +2,6 @@
 
 namespace Alfresco\Manual;
 
-use Alfresco\Manual\Manual;
 use Illuminate\Config\Repository as Configuration;
 use PHPUnit\Event\RuntimeException;
 use XMLReader;

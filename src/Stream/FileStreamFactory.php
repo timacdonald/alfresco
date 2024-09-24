@@ -1,6 +1,6 @@
 <?php
 
-namespace Alfresco;
+namespace Alfresco\Stream;
 
 use function Safe\fclose;
 use function Safe\fopen;
@@ -11,11 +11,13 @@ class FileStreamFactory
 {
     /**
      * The in-memory buffer.
+     *
+     * @var list<string>
      */
     protected array $buffer = [];
 
     /**
-     * Make a new file string.
+     * Make a new file stream.
      */
     public function make(string $path, int $chunk): Stream
     {
@@ -46,6 +48,8 @@ class FileStreamFactory
 
     /**
      * Flush the buffer to the stream.
+     *
+     * @param  resource  $file
      */
     protected function flushBuffer($file): void
     {

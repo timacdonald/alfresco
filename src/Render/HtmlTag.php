@@ -11,7 +11,7 @@ class HtmlTag implements Slotable
     /**
      * Create a new instance.
      *
-     * @param  array<string, string|bool|array<int, string>>  $attributes
+     * @param  array<string, string|bool|list<string>>  $attributes
      */
     public function __construct(
         protected string $as,
@@ -60,7 +60,7 @@ class HtmlTag implements Slotable
     /**
      * Retrieve the tags attributes.
      *
-     * @return array<int, string>
+     * @return list<string>
      */
     protected function attributes(): array
     {
@@ -92,7 +92,7 @@ class HtmlTag implements Slotable
     /**
      * Attach the given attributes.
      *
-     * @param  array<string, string|bool|array<int, string>>  $attributes
+     * @param  array<string, string|bool|list<string>>  $attributes
      */
     public function withAttributes(array $attributes): HtmlTag
     {
