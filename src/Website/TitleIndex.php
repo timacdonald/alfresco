@@ -13,6 +13,7 @@ use Alfresco\Stream\FileStreamFactory;
 use Alfresco\Stream\Stream;
 use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class TitleIndex implements Generator
@@ -129,7 +130,7 @@ class TitleIndex implements Generator
      */
     public function tearDown(): void
     {
-        $this->stream->write("];\n");
+        $this->stream->write('];');
     }
 
     /**
@@ -139,7 +140,7 @@ class TitleIndex implements Generator
     {
         return $this->render->wrapper(
             before: <<<PHP
-                    {$this->render->export($section->id())} => new Title(id:{$this->render->export($section->id())},level:{$level}, html: new HtmlString(<<<'HTML'
+                {$this->render->export($section->id())} => new Title(id:{$this->render->export($section->id())},level:{$level}, html: new HtmlString(<<<'HTML'
 
                 PHP,
             after: <<<'PHP'
@@ -155,7 +156,7 @@ class TitleIndex implements Generator
      */
     protected function renderText(Node $node): string
     {
-        return e($node->value);
+        return e(Str::squish($node->value));
     }
 
     /**
@@ -175,7 +176,7 @@ class TitleIndex implements Generator
             $this->levelModifier = 1;
         }
 
-        // The FAQs should revert and use no level modifier.
+        // The FAQs should then revert and use no level modifier.
         if ($title->parent('book')?->hasId('faq')) {
             $this->levelModifier = 0;
         }

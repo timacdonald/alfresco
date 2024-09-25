@@ -1,5 +1,5 @@
 
-<bold>🍃 <🌈>Alfresco</🌈></bold>
+<bold>🍃 Alfresco</bold>
 A fresh take on the PHP documentation website generation.
 
 <yellow><bold>USAGE</bold></yellow>
