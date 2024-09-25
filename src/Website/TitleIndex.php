@@ -140,7 +140,7 @@ class TitleIndex implements Generator
     {
         return $this->render->wrapper(
             before: <<<PHP
-                {$this->render->export($section->id())} => new Title(id:{$this->render->export($section->id())},level:{$level}, html: new HtmlString(<<<'HTML'
+                {$this->render->export($section->id())} => new Title(id: {$this->render->export($section->id())}, level: {$level}, html: new HtmlString(<<<'HTML'
 
                 PHP,
             after: <<<'PHP'
