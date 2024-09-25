@@ -56,8 +56,10 @@ class TitleIndex implements Generator
         $this->stream->write(<<< 'PHP'
             <?php
 
+            declare(strict_types=1);
+
             use Alfresco\Website\Title;
-            use Alfresco\HtmlString;
+            use Alfresco\Render\HtmlString;
 
             return [
 

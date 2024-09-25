@@ -55,6 +55,8 @@ class FunctionIndex implements Generator
         $this->stream->write(<<< 'PHP'
             <?php
 
+            declare(strict_types=1);
+
             use Alfresco\Website\Method;
             use Alfresco\Website\Parameter;
 

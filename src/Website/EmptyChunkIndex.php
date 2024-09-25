@@ -55,6 +55,8 @@ class EmptyChunkIndex implements Generator
         $this->stream->write(<<< 'PHP'
             <?php
 
+            declare(strict_types=1);
+
             return [
 
             PHP);
