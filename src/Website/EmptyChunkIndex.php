@@ -52,7 +52,7 @@ class EmptyChunkIndex implements Generator
      */
     public function setUp(): void
     {
-        $this->stream->write(<<< 'PHP'
+        $this->stream->write(<<<'PHP'
             <?php
 
             declare(strict_types=1);
@@ -89,7 +89,7 @@ class EmptyChunkIndex implements Generator
                 $this->isEmpty = true;
 
                 return $emptyChunk !== null
-                    ? "    {$emptyChunk->exportId()},\n"
+                    ? "    {$this->render->export($emptyChunk->id())},\n"
                     : '';
             });
         }

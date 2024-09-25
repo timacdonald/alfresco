@@ -52,7 +52,7 @@ class FunctionIndex implements Generator
      */
     public function setUp(): void
     {
-        $this->stream->write(<<< 'PHP'
+        $this->stream->write(<<<'PHP'
             <?php
 
             declare(strict_types=1);
@@ -92,7 +92,7 @@ class FunctionIndex implements Generator
 
         if ($node->name === 'methodsynopsis' && $node->parent('refsect1')) {
             $wrapper = $this->render->wrapper(
-                before: 'new Method(description:'.var_export($this->description, true).',',
+                before: 'new Method(description:'.$this->render->export($this->description).',',
                 after: new class(fn () => ($this->paramNumber = 1)) implements Stringable
                 {
                     public function __construct(protected Closure $callback)
@@ -163,17 +163,17 @@ class FunctionIndex implements Generator
 
             // method name
             if ($node->parent('methodname.methodsynopsis.refsect1')) {
-                return 'name:'.$node->exportValue().',';
+                return 'name:'.$this->render->export($node->value()).',';
             }
 
             // param type
             if ($node->parent('type.methodparam.methodsynopsis.refsect1') || $node->parent('type.type.methodparam.methodsynopsis.refsect1')) {
-                return $node->exportValue().',';
+                return $this->render->export($node->value()).',';
             }
 
             // param name
             if ($node->parent('parameter.methodparam.methodsynopsis.refsect1')) {
-                return '],'.$node->exportValue();
+                return '],'.$this->render->export($node->value());
             }
         }
 

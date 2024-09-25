@@ -18,7 +18,7 @@ use RuntimeException;
 class TitleIndex implements Generator
 {
     /**
-     * Modifier to adjust the heading level.
+     * Modifier to adjust the current heading level.
      */
     protected int $levelModifier = 0;
 
@@ -53,7 +53,7 @@ class TitleIndex implements Generator
      */
     public function setUp(): void
     {
-        $this->stream->write(<<< 'PHP'
+        $this->stream->write(<<<'PHP'
             <?php
 
             declare(strict_types=1);
@@ -107,7 +107,7 @@ class TitleIndex implements Generator
             'productname' => '',
             'literal', 'command', 'function' => $this->render->tag('code'),
             'classname' => $this->render->tag('var'),
-            default => throw new RuntimeException(<<< ERROR
+            default => throw new RuntimeException(<<<ERROR
                 Unhandled [{$node->name}] tag found in title. 
                 Update the TitleIndex::render method.
 
@@ -131,11 +131,11 @@ class TitleIndex implements Generator
     protected function renderTitle(Node $section, int $level): Slotable
     {
         return $this->render->wrapper(
-            before: <<< PHP
-                    {$section->exportId()} => new Title(id: {$section->exportId()}, level: {$level}, html: new HtmlString(<<< 'HTML'
+            before: <<<PHP
+                    {$this->render->export($section->id())} => new Title(id:{$this->render->export($section->id())},level:{$level}, html: new HtmlString(<<<'HTML'
 
                 PHP,
-            after: <<< 'PHP'
+            after: <<<'PHP'
 
                 HTML)),
 

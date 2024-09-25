@@ -96,6 +96,11 @@ class Factory
             : new HtmlString($component));
     }
 
+    public function export(mixed $value): string
+    {
+        return var_export($value, true);
+    }
+
     /**
      * Resolve the component.
      *

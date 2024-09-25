@@ -192,11 +192,11 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     public function tearDown(): void
     {
-        $this->output->line(<<< 'BASH'
+        $this->output->line(<<<'BASH'
             <dim>Building assets.</dim>
             BASH);
 
-        system(<<< 'BASH'
+        system(<<<'BASH'
             npm run build
             npx tailwindcss -i ./resources/style.css -o ./build/output/style.css
             cp ./resources/script.js ./build/output/script.js
@@ -1518,13 +1518,13 @@ class Generator implements DependsOnIndexes, GeneratorContract
         ];
 
         if (is_string($content)) {
-            return <<< HTML
+            return <<<HTML
                 <!-- data-name="{$name}" data-id="{$id}" data-role="{$role}" -->
                 HTML.$content;
         }
 
         return $this->render->wrapper(
-            before: <<< HTML
+            before: <<<HTML
                 <!-- data-name="{$name}" data-id="{$id}" data-role="{$role}" -->
                 HTML.$content->before(),
             after: $content->after(),

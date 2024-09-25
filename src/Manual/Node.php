@@ -53,22 +53,6 @@ class Node
     }
 
     /**
-     * Export the node's ID attribute.
-     */
-    public function exportId(): string
-    {
-        return var_export($this->id(), true);
-    }
-
-    /**
-     * Export the node's value.
-     */
-    public function exportValue(): string
-    {
-        return var_export($this->value, true);
-    }
-
-    /**
      * Retrieve the node's role attribute.
      */
     public function role(): string
