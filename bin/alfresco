@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+declare(strict_types=1);
+
 use Alfresco\Contracts\DependsOnIndexes;
 use Alfresco\Manual;
 use Alfresco\Manual\Factory;
@@ -38,7 +40,7 @@ $options = collect($argv)
 
 // Input helpers...
 
-$option = fn ($key): ?string => $options->firstWhere('name', $key)['value'] ?? null;
+$option = fn ($key): null|string|bool => $options->firstWhere('name', $key)['value'] ?? null;
 $options = fn ($key): Collection => $options->where('name', $key)->pluck('value');
 
 /*

@@ -128,7 +128,7 @@ class FunctionIndex implements Generator
             $node->attribute('class') === 'union'
         ) {
             return $this->render->wrapper(
-                before: 'return:[',
+                before: 'returnTypes:[',
                 after: '],',
             );
         }
@@ -138,7 +138,7 @@ class FunctionIndex implements Generator
             $node->parent('methodsynopsis.refsect1')
         ) {
             return $this->render->wrapper(
-                before: 'return:[',
+                before: 'returnTypes:[',
                 after: '],',
             );
         }
