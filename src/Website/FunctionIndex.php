@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Website;
 
 use Alfresco\Contracts\Generator;

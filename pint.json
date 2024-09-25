@@ -1,0 +1,6 @@
+{
+    "rules": {
+        "strict_param": true,
+        "declare_strict_types": true
+    }
+}

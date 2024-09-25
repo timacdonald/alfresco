@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Support;
 
 use Illuminate\Translation\Translator as BaseTranslator;

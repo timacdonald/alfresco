@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Alfresco\Render\Factory;
 use Alfresco\Support\Translator;
 use Illuminate\Config\Repository as Configuration;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Website;
 
 use Alfresco\Manual\Node;
@@ -18,6 +20,6 @@ class Website
             'preface',
             'sect1',
             'section',
-        ]) && $node->hasId() && ! $node->objectsToChunking();
+        ], true) && $node->hasId() && ! $node->objectsToChunking();
     }
 }

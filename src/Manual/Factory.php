@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Manual;
 
 use Illuminate\Config\Repository as Configuration;
-use PHPUnit\Event\RuntimeException;
+use RuntimeException;
 use XMLReader;
 
 class Factory

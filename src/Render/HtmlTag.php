@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Render;
 
 use Alfresco\Contracts\Slotable;
@@ -172,6 +174,6 @@ class HtmlTag implements Slotable
             'source',
             'track',
             'wbr',
-        ]);
+        ], true);
     }
 }

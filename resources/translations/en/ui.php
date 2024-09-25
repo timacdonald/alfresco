@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'authors.by' => 'Documentation by',
     'caution.badge' => 'Caution',

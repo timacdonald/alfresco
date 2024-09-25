@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Manual;
 
 use Alfresco\Support\Link;
@@ -116,7 +118,7 @@ class Node
         return in_array($this->type, [
             XMLReader::WHITESPACE,
             XMLReader::SIGNIFICANT_WHITESPACE,
-        ]);
+        ], true);
     }
 
     /**

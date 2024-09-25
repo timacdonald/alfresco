@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Website;
 
 use Alfresco\Contracts\Generator;
@@ -90,7 +92,7 @@ class EmptyChunkIndex implements Generator
             });
         }
 
-        if (! in_array($node->name, ['info', 'title', '#text'])) {
+        if (! in_array($node->name, ['info', 'title', '#text'], true)) {
             $this->isEmpty = false;
         }
 

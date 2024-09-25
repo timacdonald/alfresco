@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Website;
 
 use Alfresco\Contracts\DependsOnIndexes;
@@ -1505,7 +1507,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function withDebuggingInfo(Node $node, string|Slotable $content): string|Slotable
     {
-        if (in_array($node->name, ['#text', '#cdata-section'])) {
+        if (in_array($node->name, ['#text', '#cdata-section'], true)) {
             return $content;
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Website;
 
 use Illuminate\Support\Collection;
@@ -7,83 +9,58 @@ use Illuminate\Support\Collection;
 class Method
 {
     /**
-     * The method paraameters.
+     * The method parameters.
      *
      * @var Collection<int, Parameter|null>
      */
-    protected Collection $parametersCache;
+    public Collection $parameters;
+
+    /**
+     * The method return types.
+     *
+     * @var Collection<int, string>
+     */
+    public Collection $returnTypes;
 
     /**
      * Create a new instance.
      *
-     * @param  list<string>  $return
+     * @param  list<string>  $returnTypes
      */
     public function __construct(
         public ?string $description,
         public string $name,
-        protected array $return = [],
-        public ?Parameter $p1 = null,
-        public ?Parameter $p2 = null,
-        public ?Parameter $p3 = null,
-        public ?Parameter $p4 = null,
-        public ?Parameter $p5 = null,
-        public ?Parameter $p6 = null,
-        public ?Parameter $p7 = null,
-        public ?Parameter $p8 = null,
-        public ?Parameter $p9 = null,
-        public ?Parameter $p10 = null,
-        public ?Parameter $p11 = null,
-        public ?Parameter $p12 = null,
-        public ?Parameter $p13 = null,
-        public ?Parameter $p14 = null,
-        public ?Parameter $p15 = null,
-        public ?Parameter $p16 = null,
-        public ?Parameter $p17 = null,
-        public ?Parameter $p18 = null,
-        public ?Parameter $p19 = null,
-        public ?Parameter $p20 = null,
+        array $returnTypes = [],
+        ?Parameter $p1 = null,
+        ?Parameter $p2 = null,
+        ?Parameter $p3 = null,
+        ?Parameter $p4 = null,
+        ?Parameter $p5 = null,
+        ?Parameter $p6 = null,
+        ?Parameter $p7 = null,
+        ?Parameter $p8 = null,
+        ?Parameter $p9 = null,
+        ?Parameter $p10 = null,
+        ?Parameter $p11 = null,
+        ?Parameter $p12 = null,
+        ?Parameter $p13 = null,
+        ?Parameter $p14 = null,
+        ?Parameter $p15 = null,
+        ?Parameter $p16 = null,
+        ?Parameter $p17 = null,
+        ?Parameter $p18 = null,
+        ?Parameter $p19 = null,
+        ?Parameter $p20 = null,
     ) {
         $this->description = $this->description ?? '';
-    }
 
-    /**
-     * Retrieve the return types.
-     *
-     * @return Collection<int, string>
-     */
-    public function returnTypes(): Collection
-    {
-        return collect($this->return);
-    }
+        $this->returnTypes = collect($returnTypes);
 
-    /**
-     * Retrieve the parameters.
-     *
-     * @return Collection<int, Parameter>
-     */
-    public function parameters(): Collection
-    {
-        return $this->parametersCache ??= collect([
-            $this->p1,
-            $this->p2,
-            $this->p3,
-            $this->p4,
-            $this->p5,
-            $this->p6,
-            $this->p7,
-            $this->p8,
-            $this->p9,
-            $this->p10,
-            $this->p11,
-            $this->p12,
-            $this->p13,
-            $this->p14,
-            $this->p15,
-            $this->p16,
-            $this->p17,
-            $this->p18,
-            $this->p19,
-            $this->p20,
+        $this->parameters ??= collect([
+            $p1, $p2, $p3, $p4, $p5,
+            $p6, $p7, $p8, $p9, $p10,
+            $p11, $p12, $p13, $p14, $p15,
+            $p16, $p17, $p18, $p19, $p20,
         ])->filter()->values();
     }
 }

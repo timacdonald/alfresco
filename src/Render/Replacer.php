@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Alfresco\Render;
 
 use Illuminate\Config\Repository as Configuration;
