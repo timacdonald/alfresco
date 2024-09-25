@@ -53,7 +53,7 @@ class Output
                 $result = str('');
 
                 while ($message->contains('<🌈>')) {
-                    $result = $result->append($message->before('<🌈>'));
+                    $result = $result->append($message->before('<🌈>')->toString());
 
                     $inner = $message->after('<🌈>')->before('</🌈>');
 
@@ -62,7 +62,7 @@ class Output
                     $message = $message->after('</🌈>');
                 }
 
-                return $result->append($message);
+                return $result->append($message->toString());
             });
 
         return $this;

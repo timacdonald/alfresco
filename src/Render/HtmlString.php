@@ -23,7 +23,7 @@ class HtmlString implements Slotable
      */
     public function before(): string
     {
-        return $this->content;
+        return (string) $this->content;
     }
 
     /**

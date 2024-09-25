@@ -89,9 +89,9 @@ class Factory
      *
      * @param  array<string, mixed>  $data
      */
-    public function component(string $path, array $data = []): Slotable
+    public function component(string|Closure $component, array $data = []): Slotable
     {
-        return with($this->resolve($path, $data), fn (Slotable|string $component) => $component instanceof Slotable
+        return with($this->resolve($component, $data), fn (Slotable|string $component) => $component instanceof Slotable
             ? $component
             : new HtmlString($component));
     }
@@ -101,9 +101,12 @@ class Factory
      *
      * @param  array<string, mixed>  $data
      */
-    protected function resolve(string $path, array $data): Slotable|string
+    protected function resolve(string|Closure $component, array $data): Slotable|string
     {
-        return $this->container->call($this->resolver($path), $data);
+        return $this->container->call(
+            $component instanceof Closure ? $component : $this->resolver($component),
+            $data,
+        );
     }
 
     /**

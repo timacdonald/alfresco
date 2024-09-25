@@ -11,7 +11,7 @@ class Method
     /**
      * The method parameters.
      *
-     * @var Collection<int, Parameter|null>
+     * @var Collection<int, Parameter>
      */
     public Collection $parameters;
 
@@ -23,12 +23,17 @@ class Method
     public Collection $returnTypes;
 
     /**
+     * The method description.
+     */
+    public string $description;
+
+    /**
      * Create a new instance.
      *
      * @param  list<string>  $returnTypes
      */
     public function __construct(
-        public ?string $description,
+        ?string $description,
         public string $name,
         array $returnTypes = [],
         ?Parameter $p1 = null,
