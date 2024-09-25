@@ -7,6 +7,7 @@ namespace Alfresco\Website;
 use Alfresco\Contracts\Generator;
 use Alfresco\Contracts\Slotable;
 use Alfresco\Manual\Node;
+use Alfresco\Render\Factory;
 use Alfresco\Stream\FileStreamFactory;
 use Alfresco\Stream\Stream;
 use Illuminate\Config\Repository as Configuration;
@@ -39,7 +40,8 @@ class EmptyChunkIndex implements Generator
      */
     public function __construct(
         protected FileStreamFactory $streamFactory,
-        protected Configuration $config
+        protected Configuration $config,
+        protected Factory $render,
     ) {
         $this->stream = $this->streamFactory->make(
             "{$this->config->get('index_directory')}/website/{$this->config->get('language')}/empty_pages.php",

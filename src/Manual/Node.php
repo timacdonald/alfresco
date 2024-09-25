@@ -47,9 +47,13 @@ class Node
     /**
      * Determine if the node has an ID attribute.
      */
-    public function hasId(): bool
+    public function hasId(?string $id = null): bool
     {
-        return isset($this->attributes[Manual::XMLNS_XML]['id']);
+        if ($id === null) {
+            return isset($this->attributes[Manual::XMLNS_XML]['id']);
+        } else {
+            return ($this->attributes[Manual::XMLNS_XML]['id'] ?? null) === $id;
+        }
     }
 
     /**

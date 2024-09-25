@@ -87,6 +87,8 @@ class TitleIndex implements Generator
      */
     public function render(Node $node): string|Slotable
     {
+        // We only care about nodes that are title tags or that are the
+        // children of title tags.
         $title = $node->name === 'title'
             ? $node
             : $node->ancestor('title');
@@ -94,6 +96,11 @@ class TitleIndex implements Generator
         if ($title === null) {
             return '';
         }
+
+        // We do not want to capture the stray "PHP Manual" title.
+        // if ($title->parent('book')?->hasId('manual')) {
+        //     return '';
+        // }
 
         [$section, $level] = $this->info($title);
 
@@ -158,13 +165,18 @@ class TitleIndex implements Generator
      */
     public function info(Node $title): array
     {
-        // Once we hit the function reference section, the rules here change.
-        // We will modify each result by nesting it one level deeper.
-        if ($isFunctionRef = ($title->parent('set')?->hasId() && $title->parent('set')->id() === 'funcref')) {
+        // Once we hit the function reference section the rules change, so we
+        // will check if we are in the function reference or not.
+        $isFunctionRef = (bool) $title->parent('set')?->hasId('funcref');
+
+        // When in the function reference, we modify each title within the
+        // function reference to be one level deeper.
+        if ($isFunctionRef) {
             $this->levelModifier = 1;
         }
 
-        if ($title->parent('book')?->hasId() && $title->parent('book')->id() === 'faq') {
+        // The FAQs should revert and use no level modifier.
+        if ($title->parent('book')?->hasId('faq')) {
             $this->levelModifier = 0;
         }
 

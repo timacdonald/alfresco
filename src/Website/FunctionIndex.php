@@ -163,17 +163,17 @@ class FunctionIndex implements Generator
 
             // method name
             if ($node->parent('methodname.methodsynopsis.refsect1')) {
-                return 'name:'.$this->render->export($node->value()).',';
+                return 'name:'.$this->render->export($node->value).',';
             }
 
             // param type
             if ($node->parent('type.methodparam.methodsynopsis.refsect1') || $node->parent('type.type.methodparam.methodsynopsis.refsect1')) {
-                return $this->render->export($node->value()).',';
+                return $this->render->export($node->value).',';
             }
 
             // param name
             if ($node->parent('parameter.methodparam.methodsynopsis.refsect1')) {
-                return '],'.$this->render->export($node->value());
+                return '],'.$this->render->export($node->value);
             }
         }
 
