@@ -110,7 +110,7 @@ class TitleIndex implements Generator
         }
 
         return match ($node->name) {
-            'title' => $this->renderTitle($section, $level),
+            'title' => $this->renderTitle($node, $section, $level),
             '#text' => $this->renderText($node),
             'productname' => '',
             'literal', 'command', 'function' => $this->render->tag('code'),
@@ -136,16 +136,21 @@ class TitleIndex implements Generator
     /**
      * Render a title node.
      */
-    protected function renderTitle(Node $section, int $level): Slotable
+    protected function renderTitle(Node $title, Node $section, int $level): Slotable
     {
         return $this->render->wrapper(
             before: <<<PHP
-                {$this->render->export($section->id())} => new Title(id: {$this->render->export($section->id())}, level: {$level}, html: new HtmlString(<<<'HTML'
+                    {$this->render->export($section->id())} => new Title(
+                        id: {$this->render->export($section->id())},
+                        lineage: '{$title->lineage()}',
+                        level: {$level},
+                        html: new HtmlString(<<<'HTML'
 
                 PHP,
             after: <<<'PHP'
 
-                HTML)),
+                            HTML)),
+
 
                 PHP
         );
@@ -156,7 +161,7 @@ class TitleIndex implements Generator
      */
     protected function renderText(Node $node): string
     {
-        return e(Str::squish($node->value));
+        return '            '.e(Str::squish($node->value));
     }
 
     /**

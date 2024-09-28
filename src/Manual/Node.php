@@ -216,9 +216,9 @@ class Node
     }
 
     /**
-     * Retrieve the node's parents as a dot separated path.
+     * Retrieve the node's lineage as a dot separated path.
      */
-    public function parents(): ?string
+    public function lineage(): ?string
     {
         if ($this->parent === null) {
             return null;
@@ -228,7 +228,13 @@ class Node
         $parents = '';
 
         while ($node = $node->parent) {
-            $parents .= "{$node->name}.";
+            $parents .= "{$node->name}";
+
+            if ($node->hasId()) {
+                $parents .= "[{$node->id()}]";
+            }
+
+            $parents .= '.';
         }
 
         return rtrim($parents, '.');

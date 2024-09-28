@@ -16,6 +16,7 @@ class Title
      */
     public function __construct(
         public string $id,
+        public string $lineage,
         public int $level,
         public HtmlString $html,
         public Collection $children = new Collection
