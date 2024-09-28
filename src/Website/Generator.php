@@ -458,7 +458,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
             );
         }
 
-        return $this->render->component('inline-code')->as('var');
+        return $this->render->component('inline-code', [
+            'as' => 'var',
+        ]);
     }
 
     /**
@@ -568,7 +570,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderEnVar(Node $node): Slotable|string
     {
-        return $this->render->component('inline-code')->as('var');
+        return $this->render->component('inline-code', [
+            'as' => 'var',
+        ]);
     }
 
     /**
@@ -1453,8 +1457,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderVarName(Node $node): Slotable|string
     {
-        return $this->render->component('inline-code')
-            ->as('var');
+        return $this->render->component('inline-code', [
+            'as' => 'var'
+        ]);
         // ->wrapSlot($this->render->component('link', [
         //     'link' => Link::internal('#todo'),
         // ]));

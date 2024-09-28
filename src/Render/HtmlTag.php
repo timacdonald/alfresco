@@ -122,20 +122,6 @@ class HtmlTag implements Slotable
     }
 
     /**
-     * Change the HTML tag.
-     */
-    public function as(string $as): HtmlTag
-    {
-        return new HtmlTag(
-            as: $as,
-            attributes: $this->attributes,
-            before: $this->before,
-            after: $this->after,
-            slot: $this->slot,
-        );
-    }
-
-    /**
      * Convert to a string.
      */
     public function toString(): string
