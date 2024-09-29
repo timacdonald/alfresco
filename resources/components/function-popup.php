@@ -27,10 +27,9 @@ return function (
 
     return $render->html(<<<HTML
         <div role="tooltip" id="{$id}" class="text-slate-600 text-left pointer-events-none leading-5">
-            <pre class="text-slate-400">
-        /**
-         * {$description}
-         */</pre>
+            <pre class="text-slate-400">/**
+     * {$description}
+     */</pre>
             <span class="text-blue-600">
                 {$method->name}
             </span>
