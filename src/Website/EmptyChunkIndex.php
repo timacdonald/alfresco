@@ -22,6 +22,8 @@ class EmptyChunkIndex implements Generator
 
     /**
      * The cache of all ids.
+     *
+     * @var Collection<int, string>
      */
     protected ?Collection $idsCache;
 
@@ -118,7 +120,7 @@ class EmptyChunkIndex implements Generator
      */
     public function ids(): Collection
     {
-        return $this->idsCache ??= collect(require $this->stream->path);
+        return $this->idsCache ??= collect(require $this->stream->path); // @phpstan-ignore argument.templateType, argument.templateType
     }
 
     /**
