@@ -87,6 +87,7 @@ class FunctionIndex implements Generator
     public function render(Node $node): string|Slotable
     {
         if ($node->name === 'refpurpose') {
+            // Str::squish
             $this->description = $node->innerContent();
         }
 

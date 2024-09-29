@@ -23,6 +23,8 @@ use Alfresco\Stream\FileStreamFactory;
 use Alfresco\Contracts\DependsOnIndexes;
 use Illuminate\Config\Repository as Configuration;
 use Alfresco\Contracts\Generator as GeneratorContract;
+use Exception;
+use Throwable;
 
 class Generator implements DependsOnIndexes, GeneratorContract
 {
@@ -234,7 +236,11 @@ class Generator implements DependsOnIndexes, GeneratorContract
          * @see self::renderProgramListing()
          */
         if ($programlisting = $node->parent('programlisting')) {
-            return $this->render->codeSnippet($node->value, $programlisting->role());
+            if ($programlisting->hasRole()) {
+                return $this->render->codeSnippet($node->value, $programlisting->role());
+            }
+
+            return $node->value;
         }
 
         /**
@@ -243,7 +249,11 @@ class Generator implements DependsOnIndexes, GeneratorContract
          * @see self::renderScreen()
          */
         if ($screen = $node->parent('screen')) {
-            return $this->render->codeSnippet($node->value, $screen->role());
+            if ($screen->hasRole()) {
+                return $this->render->codeSnippet($node->value, $screen->role());
+            }
+
+            return $node->value;
         }
 
         return e($node->value);
@@ -260,7 +270,11 @@ class Generator implements DependsOnIndexes, GeneratorContract
          * @see self::renderScreen()
          */
         if ($screen = $node->ancestor('screen')) {
-            return $this->render->codeSnippet($node->value, $screen->role());
+            if ($screen->hasRole()) {
+                return $this->render->codeSnippet($node->value, $screen->role());
+            }
+
+            return $node->value;
         }
 
         return e($node->value);
@@ -453,13 +467,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderConstant(Node $node): Slotable|string
     {
-        // When a constant appears in a title we want to keep the change in
-        // design to a minimum. We will just wrap this in a var tag and make it
-        // monospaced.
         if ($node->hasParent('title')) {
             return $this->render->tag(
                 as: 'var',
-                class: 'font-mono',
+                class: 'font-mono not-italic',
             );
         }
 
@@ -558,9 +569,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     {
         return $this->render->tag(
             as: $node->hasParent('row.thead') ? 'th' : 'td',
-            attributes: [
-                'class' => 'py-2 px-3 text-left first-of-type:pl-6 last:pr-6 tabular-nums',
-            ]
+            class: 'py-2 px-3 text-left first-of-type:pl-6 last:pr-6 tabular-nums',
         );
     }
 
@@ -589,9 +598,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     {
         return $this->render->tag(
             as: 'figure',
-            attributes: [
-                'class' => 'my-6',
-            ],
+            class: 'my-6',
         );
     }
 
@@ -602,15 +609,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderFilename(Node $node): Slotable|string
     {
-        // When a filename appear in a "title" we want to keep the change
-        // in design to a minimum. We will just wrap this in a code tag.
         if ($node->hasParent('title')) {
-            return $this->render->tag(
-                as: 'code',
-                attributes: [
-                    // 'class' => 'font-sans',
-                ],
-            );
+            return $this->render->tag('code');
         }
 
         return $this->render->component('emphasised-literal');
@@ -641,7 +641,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         // TODO handle when a function has multiple prototypes.
         $function = $this->functionIndex->all()[$node->innerContent()][0] ?? null;
 
-        // We can't actually do this. Just a step along the way...
+        // We can't actually do this. Just a step along the way to make it work...
         if ($function === null) {
             return '';
         }
@@ -744,9 +744,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     {
         return $this->render->tag(
             as: 'figure',
-            attributes: [
-                'class' => 'my-6',
-            ],
+            class: 'my-6',
         );
     }
 
@@ -767,10 +765,11 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderInterfaceName(Node $node): Slotable|string
     {
-        return $this->render->component('inline-code')
-            ->wrapSlot($this->render->component('link', [
-                'link' => Link::internal("class.{$node->innerContent()}"),
-            ]));
+        $link = $this->render->component('link', [
+            'link' => Link::internal("class.{$node->innerContent()}"),
+        ]);
+
+        return $this->render->component('inline-code')->wrapSlot($link);
     }
 
     /**
@@ -800,7 +799,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderLink(Node $node): Slotable|string
     {
-        // All titles now contain "hash" links. I feel this is more valuable
+        // All titles contain "hash" links which I feel this is more valuable
         // than providing in-title links. We don't wanna be wrapping links
         // within links. That is a bad time for everyone.
         if ($node->hasAncestor('title')) {
@@ -820,9 +819,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderListItem(Node $node): Slotable|string
     {
         if ($node->hasParent('varlistentry')) {
-            return $this->render->tag('dd', attributes: [
-                'class' => 'mt-2',
-            ]);
+            return $this->render->tag(
+                as: 'dd',
+                class: 'mt-2',
+            );
         }
 
         return $this->render->tag('li');
@@ -895,13 +895,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderOptional(Node $node): Slotable|string
     {
-        if (! $node->hasAncestor('synopsis')) {
-            $this->unhandledNode($node, 'Not sure how to handle this outside of synopsis');
-        }
-
         return $this->render->wrapper(
             before: '[',
-            after: ']',
+            after: ']'
         );
     }
 
@@ -927,10 +923,6 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderOtherCredit(Node $node): Slotable|string
     {
-        if (! $authorGroup = $node->parent('authorgroup')) {
-            $this->unhandledNode($node, 'Generic "othercredit" component not implemented.');
-        }
-
         if ($authorGroup->id() === 'authors') {
             return $this->render->tag('li');
         }
@@ -1092,9 +1084,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderRow(Node $node): Slotable|string
     {
-        return $this->render->tag('tr', attributes: [
-            'class' => 'border-b border-violet-50 even:bg-violet-25',
-        ]);
+        return $this->render->tag(
+            as: 'tr',
+            class: 'border-b border-violet-50 even:bg-violet-25',
+        );
     }
 
     /**
@@ -1241,9 +1234,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     {
         return $this->render->tag(
             as: 'table',
-            attributes: [
-                'class' => 'my-6 w-full border-t border-l border-r border-violet-50',
-            ],
+            class: 'my-6 w-full border-t border-l border-r border-violet-50',
         );
     }
 
@@ -1292,9 +1283,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderTHead(Node $node): Slotable|string
     {
-        return $this->render->tag('thead', attributes: [
-            'class' => 'bg-violet-50 text-violet-950 font-bold border-b border-violet-100',
-        ]);
+        return $this->render->tag(
+            as: 'thead',
+            class: 'bg-violet-50 text-violet-950 font-bold border-b border-violet-100',
+        );
     }
 
     /**
@@ -1315,7 +1307,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderTitle(Node $node): Slotable|string
     {
         // The headings in the preface are a special case. We will just force
-        // them to be level:2 without trying to do anything special.
+        // them to be level two without trying to do anything special.
         if ($node->ancestor('section')?->hasAncestor('preface')) {
             return $this->render->component('title', [
                 'level' => 2,
@@ -1430,9 +1422,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderVariableList(Node $node): Slotable|string
     {
-        return $this->render->tag('dl', attributes: [
-            'class' => 'space-y-6',
-        ]);
+        return $this->render->tag(
+            as:'dl',
+            class: 'space-y-6',
+        );
     }
 
     /**
@@ -1442,9 +1435,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderVarListEntry(Node $node): Slotable|string
     {
-        return $this->render->tag(
-            as: 'div',
-        );
+        return $this->render->tag('div');
     }
 
     /**

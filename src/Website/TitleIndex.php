@@ -114,7 +114,9 @@ class TitleIndex implements Generator
             '#text' => $this->renderText($node),
             'productname' => '',
             'literal', 'command', 'function' => $this->render->tag('code'),
-            'classname' => $this->render->tag('var'),
+            'classname' => $this->render->tag('var', [
+                'class' => 'not-italic',
+            ]),
             default => throw new RuntimeException(<<<ERROR
                 Unhandled [{$node->name}] tag found in title. 
                 Update the TitleIndex::render method.

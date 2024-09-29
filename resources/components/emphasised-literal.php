@@ -10,8 +10,6 @@ return fn (
     Factory $render,
 ) => $render->tag(
     as: 'em',
-    attributes: [
-        'class' => 'not-italic',
-    ],
+    class: 'not-italic',
     slot: $render->component('inline-code'),
 );
