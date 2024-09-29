@@ -29,7 +29,7 @@ class FunctionIndex implements Generator
      */
     protected ?Collection $allCache;
 
-    protected $paramNumber = 1;
+    protected int $paramNumber = 1;
 
     protected ?string $description = null;
 

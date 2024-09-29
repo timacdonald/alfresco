@@ -338,4 +338,19 @@ class Node
     {
         return $this->attributes !== [];
     }
+
+    /**
+     * Determine if the node wants to chunk.
+     */
+    public function wantsToChunk(): bool
+    {
+        return in_array($this->name, [
+            'book',
+            'chapter',
+            'legalnotice',
+            'preface',
+            'sect1',
+            'section',
+        ], true) && $this->hasId() && ! $this->objectsToChunking();
+    }
 }

@@ -85,7 +85,7 @@ class EmptyChunkIndex implements Generator
      */
     public function render(Node $node): string|Slotable
     {
-        if (Website::shouldChunk($node)) {
+        if ($node->wantsToChunk()) {
             return with($this->emptyChunk(), function (?Node $emptyChunk) use ($node) {
                 $this->chunk = $node;
                 $this->isEmpty = true;

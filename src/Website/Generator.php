@@ -27,6 +27,9 @@ use function Safe\system;
 
 class Generator implements DependsOnIndexes, GeneratorContract
 {
+    /**
+     * Unique index to differentiate tooltip IDs.
+     */
     protected int $tooltipIndex = 0;
 
     /**
@@ -82,7 +85,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     public function shouldChunk(Node $node): bool
     {
-        return Website::shouldChunk($node);
+        return $node->wantsToChunk();
     }
 
     /**
