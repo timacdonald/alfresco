@@ -25,7 +25,7 @@ class FunctionIndex implements Generator
     /**
      * The cache of all functions.
      *
-     * @var Collection<string, Method>
+     * @var Collection<string, Collection<int, Method>>
      */
     protected ?Collection $allCache;
 
@@ -198,11 +198,11 @@ class FunctionIndex implements Generator
     /**
      * Retrieve all functions from the index.
      *
-     * @return Collection<string, Method>
+     * @return Collection<string, Collection<int, Method>>
      */
     public function all(): Collection
     {
-        return $this->allCache ??= collect(require $this->stream->path) // @phpstan-ignore argument.templateType, argument.templateType
+        return $this->allCache ??= collect(require $this->stream->path) // @phpstan-ignore argument.templateType, argument.templateType, assign.propertyType, return.type
             ->reduce(function ($carry, $function) {
                 $carry[$function->name] = collect([
                     ...($carry[$function->name] ?? []),
