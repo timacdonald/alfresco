@@ -23,8 +23,6 @@ use Alfresco\Stream\FileStreamFactory;
 use Alfresco\Contracts\DependsOnIndexes;
 use Illuminate\Config\Repository as Configuration;
 use Alfresco\Contracts\Generator as GeneratorContract;
-use Exception;
-use Throwable;
 
 class Generator implements DependsOnIndexes, GeneratorContract
 {
@@ -1423,7 +1421,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderVariableList(Node $node): Slotable|string
     {
         return $this->render->tag(
-            as:'dl',
+            as: 'dl',
             class: 'space-y-6',
         );
     }
