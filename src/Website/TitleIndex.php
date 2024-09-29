@@ -210,7 +210,7 @@ class TitleIndex implements Generator
      */
     public function all(): Collection
     {
-        return $this->allCache ??= collect(require_once $this->stream->path); // @phpstan-ignore argument.templateType, argument.templateType
+        return $this->allCache ??= collect(require $this->stream->path); // @phpstan-ignore argument.templateType, argument.templateType
     }
 
     /**

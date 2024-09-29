@@ -195,7 +195,7 @@ class FunctionIndex implements Generator
      */
     public function all(): Collection
     {
-        return $this->allCache ??= collect(require_once $this->stream->path)
+        return $this->allCache ??= collect(require $this->stream->path)
             ->reduce(function ($carry, $function) {
                 $carry[$function->name] = collect([
                     ...($carry[$function->name] ?? []),

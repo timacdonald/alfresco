@@ -118,7 +118,7 @@ class EmptyChunkIndex implements Generator
      */
     public function ids(): Collection
     {
-        return $this->idsCache ??= collect(require_once $this->stream->path);
+        return $this->idsCache ??= collect(require $this->stream->path);
     }
 
     /**

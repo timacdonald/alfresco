@@ -459,9 +459,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         if ($node->hasParent('title')) {
             return $this->render->tag(
                 as: 'var',
-                attributes: [
-                    'class' => 'font-mono',
-                ],
+                class: 'font-mono',
             );
         }
 
@@ -538,10 +536,6 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderEditor(Node $node): Slotable|string
     {
-        if (! $node->parent('authorgroup.info.set')?->hasNoParent()) {
-            $this->unhandledNode($node, 'Generic "editor" component not impemented.');
-        }
-
         return $this->render->component('editors');
     }
 
@@ -563,7 +557,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderEntry(Node $node): Slotable|string
     {
         return $this->render->tag(
-            $node->hasParent('row.thead') ? 'th' : 'td',
+            as: $node->hasParent('row.thead') ? 'th' : 'td',
             attributes: [
                 'class' => 'py-2 px-3 text-left first-of-type:pl-6 last:pr-6 tabular-nums',
             ]

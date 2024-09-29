@@ -14,3 +14,4 @@
 - [ ] Links should retain their color even when they contain a `code` snippet. Currently the inline code overrides the link color.
 - [ ] We should have a dedicated `class` property to accompany `attributes`
 - [ ] Function index not handling parameter union types correctly.
+- [ ] function index needs to handle tags within method descriptions, like we do in titles.

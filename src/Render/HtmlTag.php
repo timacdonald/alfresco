@@ -18,6 +18,7 @@ class HtmlTag implements Slotable
     public function __construct(
         protected string $as,
         protected array $attributes,
+        protected array|string $class,
         protected string|Stringable $before,
         protected string|Stringable $after,
         protected ?Slotable $slot,
@@ -66,6 +67,10 @@ class HtmlTag implements Slotable
      */
     protected function attributes(): array
     {
+        $attributes = array_merge_recursive($this->attributes, [
+            'class' => $this->class,
+        ]);
+
         $attributes = array_map(function (string|array|bool $value, string $key) {
             if ($value === false) {
                 return false;
@@ -84,7 +89,7 @@ class HtmlTag implements Slotable
             $value = array_map(trim(...), $value);
 
             return $key.'="'.implode(' ', $value).'"';
-        }, $this->attributes, array_keys($this->attributes));
+        }, $attributes, array_keys($attributes));
 
         $attributes = array_filter($attributes, fn (string|false $value) => $value !== false);
 

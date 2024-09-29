@@ -47,11 +47,12 @@ class Factory
     public function tag(
         string $as,
         array $attributes = [],
+        array|string $class = [],
         string|Stringable $before = '',
         string|Stringable $after = '',
         ?Slotable $slot = null
     ): HtmlTag {
-        return new HtmlTag($as, $attributes, $before, $after, $slot);
+        return new HtmlTag($as, $attributes, $class, $before, $after, $slot);
     }
 
     /**
