@@ -1253,12 +1253,12 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderTerm(Node $node): Slotable|string
     {
+        $parent = $node->expectParent('varlistentry');
+
         return $this->render->tag(
             as: 'dt',
             attributes: [
-                'id' => $node->parent('varlistentry')->hasId()
-                    ? $node->parent('varlistentry')->id()
-                    : false,
+                'id' => $parent->hasId() ? $parent->id() : false,
                 'class' => 'space-x-2',
             ],
         );
@@ -1390,7 +1390,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderType(Node $node): Slotable|string
     {
-        return $this->render->component('inline-code')->wrapSlot($this->render->component('link', [
+        $link = $this->render->component('link', [
             'link' => Link::internal(match (strtolower($node->innerContent())) {
                 'enum' => 'language.types.enumerations',
                 'int' => 'language.types.integer',
@@ -1402,15 +1402,18 @@ class Generator implements DependsOnIndexes, GeneratorContract
                 'array' => 'language.types.array',
                 'object' => 'language.types.object',
                 'callable' => 'language.types.callable',
-                'resource', 'Resource' => 'language.types.resource',
+                'resource' => 'language.types.resource',
                 'never' => 'language.types.never',
                 'void' => 'language.types.void',
                 'self', 'parent', 'static' => 'language.types.relative-class-types',
                 'false' => 'reserved.constants#constant.false',
                 'true' => 'reserved.constants#constant.true',
                 'iterable' => 'language.types.iterable',
+                default => throw new RuntimeException('Unknown type encountered'),
             }),
-        ]));
+        ]);
+
+        return $this->render->component('inline-code')->wrapSlot($link);
     }
 
     /**
