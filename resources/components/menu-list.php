@@ -19,7 +19,7 @@ return fn (
         attributes: [
             'class' => [
                 'relative flex items-center pl-4 py-1.5 before:block before:h-1.5 before:w-1.5 before:rounded-full before:absolute before:left-[3px]',
-                $title->is($active) ? 'before:bg-violet-700' : 'before:bg-violet-300',
+                $title->is($active) ? 'before:bg-violet-600' : 'before:bg-violet-300',
             ],
         ],
         before: $render->tag(
@@ -54,7 +54,7 @@ return fn (
                 attributes: [
                     'class' => [
                         'relative flex items-center pl-4 py-1.5 before:block before:h-1.5 before:w-1.5 before:rounded-full before:absolute before:left-[3px]',
-                        $title->is($active) ? 'before:bg-violet-700' : 'before:bg-violet-300',
+                        $title->is($active) ? 'before:bg-violet-600' : 'before:bg-violet-300',
                     ],
                 ],
                 before: $render->tag(

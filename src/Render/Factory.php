@@ -43,6 +43,7 @@ class Factory
      * Make a HTML tag.
      *
      * @param  array<string, string|bool|list<string>>  $attributes
+     * @param  list<string>|string  $class
      */
     public function tag(
         string $as,

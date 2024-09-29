@@ -29,8 +29,14 @@ class FunctionIndex implements Generator
      */
     protected ?Collection $allCache;
 
+    /**
+     * The current parameter number.
+     */
     protected int $paramNumber = 1;
 
+    /**
+     * The function description.
+     */
     protected ?string $description = null;
 
     /**
@@ -87,7 +93,7 @@ class FunctionIndex implements Generator
     public function render(Node $node): string|Slotable
     {
         if ($node->name === 'refpurpose') {
-            // Str::squish
+            // Str::squish?
             $this->description = $node->innerContent();
         }
 
@@ -196,7 +202,7 @@ class FunctionIndex implements Generator
      */
     public function all(): Collection
     {
-        return $this->allCache ??= collect(require $this->stream->path)
+        return $this->allCache ??= collect(require $this->stream->path) // @phpstan-ignore argument.templateType, argument.templateType
             ->reduce(function ($carry, $function) {
                 $carry[$function->name] = collect([
                     ...($carry[$function->name] ?? []),

@@ -14,6 +14,7 @@ class HtmlTag implements Slotable
      * Create a new instance.
      *
      * @param  array<string, string|bool|list<string>>  $attributes
+     * @param  list<string>|string  $class
      */
     public function __construct(
         protected string $as,
