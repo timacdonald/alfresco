@@ -12,7 +12,7 @@ return fn (
     Translator $translator,
 ) => $render->tag(
     as: 'div',
-    class: 'bg-green-50/50 my-6 first:mt-0 last:mb-0 p-6 rounded border border-green-100 text-green-950 relative',
+    class: 'bg-green-50/50 my-6 first:mt-0 last:mb-0 p-6 rounded border border-green-200 text-green-950 relative',
     attributes: [
         'aria-role' => 'note',
     ],

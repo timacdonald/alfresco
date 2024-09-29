@@ -224,9 +224,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderCData(Node $node): Slotable|string
     {
-        // These should likely be fixed in the manual
-        // if they are meant to be interpreted verbatim.
-        // $content = preg_replace('/^\\n/', '', $node->value);
+        $content = preg_replace('/^\\n/', '', $node->value);
 
         /**
          * A literal listing of all or part of a program.
@@ -235,10 +233,10 @@ class Generator implements DependsOnIndexes, GeneratorContract
          */
         if ($programlisting = $node->parent('programlisting')) {
             if ($programlisting->hasRole()) {
-                return $this->render->codeSnippet($node->value, $programlisting->role());
+                return $this->render->codeSnippet($content, $programlisting->role());
             }
 
-            return $node->value;
+            return $content;
         }
 
         /**
@@ -248,13 +246,13 @@ class Generator implements DependsOnIndexes, GeneratorContract
          */
         if ($screen = $node->parent('screen')) {
             if ($screen->hasRole()) {
-                return $this->render->codeSnippet($node->value, $screen->role());
+                return $this->render->codeSnippet($content, $screen->role());
             }
 
-            return $node->value;
+            return $content;
         }
 
-        return e($node->value);
+        return e($content);
     }
 
     /**

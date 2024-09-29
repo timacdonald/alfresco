@@ -17,3 +17,4 @@
 - [ ] function index needs to handle tags within method descriptions, like we do in titles.
 - [ ] I think a review of the `programlisting` and `screen` tags to ensure they are a) the correct tag to be used and b) have a role where applicable.
 - [ ] Images, function popups, and titles need cleanup and tightening
+- [ ] show line numbers when showing code snippet blocks
