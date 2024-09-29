@@ -22,7 +22,7 @@ return fn (
             as: 'code',
             attributes: [
                 'class' => 'font-mono text-slate-950',
-            ]
+            ],
         ),
     ),
 );

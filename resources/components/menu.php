@@ -29,5 +29,5 @@ return fn (
             'active' => $active,
             'empty' => $empty,
         ]),
-    )
+    ),
 );

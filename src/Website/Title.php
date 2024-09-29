@@ -19,7 +19,7 @@ class Title
         public string $lineage,
         public int $level,
         public HtmlString $html,
-        public Collection $children = new Collection
+        public Collection $children = new Collection,
     ) {
         //
     }
@@ -46,7 +46,7 @@ class Title
     public function hasChild(Title $title): bool
     {
         return $this->children->contains(
-            fn (Title $child) => $child->is($title) || $child->hasChild($title)
+            fn (Title $child) => $child->is($title) || $child->hasChild($title),
         );
     }
 }

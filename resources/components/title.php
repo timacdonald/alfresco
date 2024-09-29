@@ -45,5 +45,5 @@ return fn (
             ],
             after: $render->component('icon.link'),
         ),
-    )
+    ),
 );

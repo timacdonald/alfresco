@@ -3,6 +3,10 @@
         "blank_line_between_import_groups": false,
         "declare_strict_types": true,
         "ordered_imports": {"sort_algorithm": "length"},
-        "strict_param": true
+        "strict_param": true,
+        "trailing_comma_in_multiline": {
+            "after_heredoc": true,
+            "elements": ["arguments", "array_destructuring", "arrays", "match", "parameters"]
+        }
     }
 }

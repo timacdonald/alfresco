@@ -50,7 +50,7 @@ class Factory
         array|string $class = [],
         string|Stringable $before = '',
         string|Stringable $after = '',
-        ?Slotable $slot = null
+        ?Slotable $slot = null,
     ): HtmlTag {
         return new HtmlTag($as, $attributes, $class, $before, $after, $slot);
     }

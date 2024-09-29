@@ -27,7 +27,7 @@ return fn (
             as: 'code',
             attributes: [
                 'class' => 'font-mono',
-            ]
+            ],
         ),
     ),
 );

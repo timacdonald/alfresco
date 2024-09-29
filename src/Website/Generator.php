@@ -70,7 +70,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
                         'active' => $this->titleIndex->find($node->id()),
                         'items' => $this->titleIndex->heirachy(),
                         'empty' => $this->titleIndex->findMany(
-                            $this->emptyChunkIndex->ids()
+                            $this->emptyChunkIndex->ids(),
                         ),
                     ])->toString())
                     ->write(file_get_contents('resources/footer.html'))
@@ -895,7 +895,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     {
         return $this->render->wrapper(
             before: '[',
-            after: ']'
+            after: ']',
         );
     }
 
@@ -1055,7 +1055,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         if ($node->parent('info.set')?->hasNoParent()) {
             return $this->render->inlineText(
                 before: 'Published ',
-                after: '.'
+                after: '.',
             );
         }
 

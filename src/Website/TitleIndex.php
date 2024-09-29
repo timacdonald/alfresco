@@ -154,7 +154,7 @@ class TitleIndex implements Generator
                 HTML)),
 
 
-                PHP
+                PHP,
         );
     }
 
@@ -201,7 +201,7 @@ class TitleIndex implements Generator
             $title->hasParent('sect1.chapter.book.set') => [$title->parent('sect1'), 3 + $this->levelModifier],
             $title->hasParent('section.chapter.book.set.set.set') && $title->expectParent('section')->hasId() => [$title->parent('section'), 3 + $this->levelModifier],
             $title->hasParent('set') => [$title->parent('set'), 1 + $this->levelModifier],
-            default => [null, 0]
+            default => [null, 0],
         };
     }
 

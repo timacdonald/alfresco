@@ -32,7 +32,7 @@ return fn (
                 'href' => "{$title->id}.html",
             ],
             before: $title->html,
-        )
+        ),
     )->toString())
     : $render->tag(
         as: 'details',

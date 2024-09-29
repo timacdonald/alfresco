@@ -39,7 +39,7 @@ class FunctionIndex implements Generator
     public function __construct(
         protected Factory $render,
         protected FileStreamFactory $streamFactory,
-        protected Configuration $config
+        protected Configuration $config,
     ) {
         $this->stream = $this->streamFactory->make(
             "{$this->config->get('index_directory')}/website/{$this->config->get('language')}/functions.php",

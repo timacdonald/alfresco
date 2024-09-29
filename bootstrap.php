@@ -29,7 +29,7 @@ return tap(Container::getInstance(), function (Container $container) {
     $container->singleton(Factory::class);
 
     $container->bind(Shiki::class, fn (Container $container) => new Shiki(
-        $container->make(Configuration::class)->get('root_directory').'/theme.json'
+        $container->make(Configuration::class)->get('root_directory').'/theme.json',
     ));
 
     $container->bind(FileLoader::class, fn (Container $container) => new FileLoader(

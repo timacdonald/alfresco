@@ -12,5 +12,5 @@ return fn (
     Translator $translator,
 ) => $render->wrapper(
     before: $render->inlineText($translator->get('ui.editors.by')),
-    after: '.'
+    after: '.',
 );
