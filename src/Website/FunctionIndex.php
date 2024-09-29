@@ -92,7 +92,7 @@ class FunctionIndex implements Generator
 
         if ($node->name === 'methodsynopsis' && $node->parent('refsect1')) {
             $wrapper = $this->render->wrapper(
-                before: 'new Method(description:'.$this->render->export($this->description).',',
+                before: "    new Method(\n        description:".$this->render->export($this->description).',',
                 after: new class(fn () => ($this->paramNumber = 1)) implements Stringable
                 {
                     public function __construct(protected Closure $callback)
@@ -104,7 +104,7 @@ class FunctionIndex implements Generator
                     {
                         ($this->callback)();
 
-                        return "),\n";
+                        return "\n    ),\n\n";
                     }
                 },
             );
@@ -116,7 +116,7 @@ class FunctionIndex implements Generator
 
         if ($node->name === 'methodparam' && $node->parent('methodsynopsis.refsect1')) {
             return $this->render->wrapper(
-                before: 'p'.($this->paramNumber++).':new Parameter([',
+                before: "\n        p".($this->paramNumber++).': new Parameter([',
                 after: '),',
             );
         }
@@ -128,7 +128,7 @@ class FunctionIndex implements Generator
             $node->attribute('class') === 'union'
         ) {
             return $this->render->wrapper(
-                before: 'returnTypes:[',
+                before: "\n        returnTypes: [",
                 after: '],',
             );
         }
@@ -138,7 +138,7 @@ class FunctionIndex implements Generator
             $node->parent('methodsynopsis.refsect1')
         ) {
             return $this->render->wrapper(
-                before: 'returnTypes:[',
+                before: "\n        returnTypes: [",
                 after: '],',
             );
         }
@@ -163,7 +163,7 @@ class FunctionIndex implements Generator
 
             // method name
             if ($node->parent('methodname.methodsynopsis.refsect1')) {
-                return 'name:'.$this->render->export($node->value).',';
+                return "\n        name:".$this->render->export($node->value).',';
             }
 
             // param type

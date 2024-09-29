@@ -57,11 +57,11 @@ class Method
         ?Parameter $p19 = null,
         ?Parameter $p20 = null,
     ) {
-        $this->description = $this->description ?? '';
+        $this->description = $description ?? '';
 
         $this->returnTypes = collect($returnTypes);
 
-        $this->parameters ??= collect([
+        $this->parameters ??= collect([ // @phpstan-ignore assign.propertyType
             $p1, $p2, $p3, $p4, $p5,
             $p6, $p7, $p8, $p9, $p10,
             $p11, $p12, $p13, $p14, $p15,
