@@ -149,7 +149,7 @@ class TitleIndex implements Generator
                 PHP,
             after: <<<'PHP'
 
-                            HTML)),
+                HTML)),
 
 
                 PHP
@@ -161,7 +161,7 @@ class TitleIndex implements Generator
      */
     protected function renderText(Node $node): string
     {
-        return '            '.e(Str::squish($node->value));
+        return e(Str::squish($node->value));
     }
 
     /**

@@ -122,8 +122,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'firstname' => $this->renderFirstName($node),
             'function' => $this->renderFunction($node),
             'holder' => $this->renderHolder($node),
-            'imageobject' => $this->renderImageObject($node),
             'imagedata' => $this->renderImageData($node),
+            'imageobject' => $this->renderImageObject($node),
             'info' => $this->renderInfo($node),
             'informalexample' => $this->renderInformalExample($node),
             'informaltable' => $this->renderInformalTable($node),
@@ -136,6 +136,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'literallayout' => $this->renderLiteralLayout($node),
             'mediaobject' => $this->renderMediaObject($node),
             'member' => $this->renderMember($node),
+            'methodname' => $this->renderMethodName($node),
+            'modifier' => $this->renderModifier($node),
             'note' => $this->renderNote($node),
             'option' => $this->renderOption($node),
             'optional' => $this->renderOptional($node),
@@ -148,8 +150,6 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'phpdoc' => $this->renderPhpDoc($node),
             'preface' => $this->renderPreface($node),
             'procedure' => $this->renderProcedure($node),
-            'methodname' => $this->renderMethodName($node),
-            'modifier' => $this->renderModifier($node),
             'productname' => $this->renderProductName($node),
             'programlisting' => $this->renderProgramListing($node),
             'pubdate' => $this->renderPubDate($node),
@@ -184,7 +184,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
             'warning' => $this->renderWarning($node),
             'xref' => $this->renderXref($node),
             'year' => $this->renderYear($node),
-            default => tap('', fn () => dump('Unknown node', $node->name, $node->lineage())),
+            default => tap('', fn () => dd('Unknown node', $node->name, $node->lineage())),
         }, fn (string|Slotable $content) => $this->config->get('debug')
             ? $this->withDebuggingInfo($node, $content)
             : $content);
@@ -214,8 +214,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
     public function indexes(): array
     {
         return [
-            $this->functionIndex,
             $this->titleIndex,
+            $this->functionIndex,
             $this->emptyChunkIndex,
         ];
     }
@@ -225,19 +225,28 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderCData(Node $node): Slotable|string
     {
-        $content = preg_replace('/^\\n/', '', $node->value);
+        // These should likely be fixed in the manual 
+        // if they are meant to be interpreted verbatim.
+        // $content = preg_replace('/^\\n/', '', $node->value);
 
-        // Example code that you would write in your editor.
-        if (($programlisting = $node->parent('programlisting')) && $programlisting->hasRole()) {
-            return $this->render->codeSnippet($content, $programlisting->role());
+        /**
+         * A literal listing of all or part of a program.
+         *
+         * @see self::renderProgramListing() 
+         */
+        if ($programlisting = $node->parent('programlisting')) {
+            return $this->render->codeSnippet($node->value, $programlisting->role());
         }
 
-        // Output that you would see in your browser or terminal.
-        if (($screen = $node->parent('screen')) && $screen->hasRole()) {
-            return $this->render->codeSnippet($content, $screen->role());
+        /**
+         * Text that a user sees or might see on a computer screen.
+         * @see self::renderScreen()
+         */
+        if ($screen = $node->parent('screen')) {
+            return $this->render->codeSnippet($node->value, $screen->role());
         }
 
-        return e($content);
+        return e($node->value);
     }
 
     /**
@@ -245,16 +254,12 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderText(Node $node): Slotable|string
     {
-        // The screen tag contains code, so we gonna render some code. Smart.
+        /**
+         * Text that a user sees or might see on a computer screen.
+         * @see self::renderScreen()
+         */
         if ($screen = $node->ancestor('screen')) {
-            // $value = trim($node->value);
-            $value = $node->value;
-
-            if ($screen->hasRole()) {
-                return $this->render->codeSnippet($value, $screen->role());
-            }
-
-            return $value;
+            return $this->render->codeSnippet($node->value, $screen->role());
         }
 
         return e($node->value);
@@ -300,6 +305,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
      * A text-only annotation, often used for accessibility.
      *
      * @see https://tdg.docbook.org/tdg/5.2/alt.html
+     *
+     * @todo improve this
      */
     protected function renderAlt(Node $node): Slotable|string
     {
@@ -317,9 +324,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderAuthor(Node $node): Slotable|string
     {
-        if (! $authorgroup = $node->parent('authorgroup')) {
-            $this->unhandledNode($node, 'Generic "author" component not implemented.');
-        }
+        $authorgroup = $node->parent('authorgroup');
 
         if ($authorgroup->id() === 'authors') {
             return $this->render->tag('li');
@@ -361,10 +366,11 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderClassName(Node $node): Slotable|string
     {
-        return $this->render->component('inline-code')
-            ->wrapSlot($this->render->component('link', [
-                'link' => Link::internal("class.{$node->innerContent()}"),
-            ]));
+        $link = $this->render->component('link', [
+            'link' => Link::internal("class.{$node->innerContent()}"),
+        ]);
+
+        return $this->render->component('inline-code')->wrapSlot($link);
     }
 
     /**
@@ -378,10 +384,6 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderAuthorGroup(Node $node): Slotable|string
     {
-        if ((! $set = $node->parent('info.set')) || $set->hasParent()) {
-            $this->unhandledNode($node, 'Generic "authorgroup" component not implemented.');
-        }
-
         if ($node->id() === 'authors') {
             return $this->render->component('authors');
         }
