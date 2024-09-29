@@ -13,6 +13,10 @@ return fn (
     string $text = '',
 ) => $render->tag(
     as: 'a',
+    class: [
+        'text-violet-700 hover:underline group',
+        $link->isInternal ? '' : 'inline-flex items-center',
+    ],
     attributes: [
         'href' => $link->isInternal
             ? "{$link->destination}.html"
@@ -20,10 +24,6 @@ return fn (
         'rel' => $link->isInternal
             ? 'prefetch'
             : false,
-        'class' => [
-            'text-violet-700 hover:underline group',
-            $link->isInternal ? '' : 'inline-flex items-center',
-        ],
     ],
     before: $text,
     after: $link->isInternal ? '' : $render->component('icon.external-link'),

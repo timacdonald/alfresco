@@ -646,8 +646,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
 
         return $this->render->wrapper(
             slot: $this->render->component('inline-code', [
+                'class' => ['pr-7 relative'],
                 'attributes' => [
-                    'class' => ['pr-7 relative'],
                     'aria-describedby' => 'tooltip',
                 ]])
                 ->wrapSlot($this->render->wrapper(
@@ -656,9 +656,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
                     ]),
                     after: $this->render->tag(
                         as: 'button',
+                        class: 'flex items-center justify-center ml-2 h-full w-6 border-l border-violet-200 absolute right-0 top-0 rounded-r',
                         attributes: [
                             'tooltip-target' => "tooltip-{$this->tooltipIndex}",
-                            'class' => 'flex items-center justify-center ml-2 h-full w-6 border-l border-violet-200 absolute right-0 top-0 rounded-r',
                         ],
                         before: new HtmlString(<<<'HTML'
                             <!-- TODO replace this icon -->
@@ -1257,9 +1257,9 @@ class Generator implements DependsOnIndexes, GeneratorContract
 
         return $this->render->tag(
             as: 'dt',
+            class: 'space-x-2',
             attributes: [
                 'id' => $parent->hasId() ? $parent->id() : false,
-                'class' => 'space-x-2',
             ],
         );
     }

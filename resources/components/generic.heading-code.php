@@ -10,9 +10,5 @@ return fn (
     Factory $render,
 ) => $render->tag(
     as: 'code',
-    attributes: [
-        'class' => [
-            'font-mono',
-        ],
-    ],
+    class: 'font-mono',
 );

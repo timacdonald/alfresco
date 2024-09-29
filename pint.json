@@ -7,6 +7,7 @@
         "trailing_comma_in_multiline": {
             "after_heredoc": true,
             "elements": ["arguments", "array_destructuring", "arrays", "match", "parameters"]
-        }
+        },
+        "explicit_string_variable": true
     }
 }

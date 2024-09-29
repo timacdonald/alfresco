@@ -68,7 +68,7 @@ class HtmlTag implements Slotable
      */
     protected function attributes(): array
     {
-        $attributes = array_merge_recursive($this->attributes, [
+        $attributes = array_merge($this->attributes, [
             'class' => $this->class ?: false,
         ]);
 
@@ -107,7 +107,7 @@ class HtmlTag implements Slotable
         return new HtmlTag(
             as: $this->as,
             attributes: array_merge_recursive($this->attributes, $attributes),
-            class: [],
+            class: $this->class,
             before: $this->before,
             after: $this->after,
             slot: $this->slot,
