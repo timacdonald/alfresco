@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Alfresco\Stream;
 
-use function Safe\fclose;
 use function Safe\fopen;
-use function Safe\fwrite;
 use function Safe\mkdir;
+use function Safe\fclose;
+use function Safe\fwrite;
 
 class FileStreamFactory
 {

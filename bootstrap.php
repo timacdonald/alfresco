@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
+use Spatie\ShikiPhp\Shiki;
 use Alfresco\Render\Factory;
 use Alfresco\Support\Translator;
-use Illuminate\Config\Repository as Configuration;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader;
-use Spatie\ShikiPhp\Shiki;
+use Illuminate\Config\Repository as Configuration;
 
 return tap(Container::getInstance(), function (Container $container) {
     $container->instance(Container::class, $container);

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Alfresco;
 
-use Alfresco\Render\Factory;
 use Alfresco\Website\Title;
+use Alfresco\Render\Factory;
 use Illuminate\Support\Collection;
 
 return fn (

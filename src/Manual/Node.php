@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Alfresco\Manual;
 
-use Alfresco\Support\Link;
 use Closure;
-use RuntimeException;
 use XMLReader;
+use RuntimeException;
+use Alfresco\Support\Link;
 
 class Node
 {
@@ -171,6 +171,17 @@ class Node
     public function hasPreviousSibling(string $sibling): bool
     {
         return $this->previousSibling === $sibling;
+    }
+
+    public function expectParent(string $path): Node
+    {
+        $parent = $this->parent($path);
+
+        if ($parent === null) {
+            throw new RuntimeException("Expected parent was not found. From [{$this->lineage()}] looking for parent [{$path}].");
+        }
+
+        return $parent;
     }
 
     /**

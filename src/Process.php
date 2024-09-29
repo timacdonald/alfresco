@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Alfresco;
 
-use Alfresco\Contracts\Generator;
-use Alfresco\Contracts\Slotable;
-use Alfresco\Manual\Manual;
-use Alfresco\Manual\Node;
-use Alfresco\Stream\Stream;
 use Closure;
 use RuntimeException;
 use SplObjectStorage;
+use Alfresco\Manual\Node;
+use Alfresco\Manual\Manual;
+use Alfresco\Stream\Stream;
+use Alfresco\Contracts\Slotable;
+use Alfresco\Contracts\Generator;
 
 class Process
 {

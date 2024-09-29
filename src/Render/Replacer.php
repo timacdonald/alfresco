@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Alfresco\Render;
 
-use Illuminate\Config\Repository as Configuration;
 use Illuminate\Support\Collection;
-use Symfony\Component\Finder\Finder;
-
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
+use Symfony\Component\Finder\Finder;
+use Illuminate\Config\Repository as Configuration;
 
 class Replacer
 {

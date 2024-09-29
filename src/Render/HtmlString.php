@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Alfresco\Render;
 
-use Alfresco\Contracts\Slotable;
 use Stringable;
+use Alfresco\Contracts\Slotable;
 
 class HtmlString implements Slotable
 {

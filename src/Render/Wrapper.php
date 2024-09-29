@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Alfresco\Render;
 
-use Alfresco\Contracts\Slotable;
-use RuntimeException;
 use Stringable;
+use RuntimeException;
+use Alfresco\Contracts\Slotable;
 
 class Wrapper implements Slotable
 {

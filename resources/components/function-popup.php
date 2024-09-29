@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Alfresco;
 
+use Illuminate\Support\Str;
 use Alfresco\Render\Factory;
 use Alfresco\Website\Method;
 use Alfresco\Website\Parameter;
-use Illuminate\Support\Str;
 
 $parameter = fn (Factory $render, Parameter $parameter) => $render->html(<<<'HTML'
     <span class="text-fuchsia-600">

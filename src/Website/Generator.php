@@ -4,26 +4,25 @@ declare(strict_types=1);
 
 namespace Alfresco\Website;
 
-use Alfresco\Contracts\DependsOnIndexes;
-use Alfresco\Contracts\Generator as GeneratorContract;
-use Alfresco\Contracts\Slotable;
 use Alfresco\Date;
-use Alfresco\Manual\Node;
 use Alfresco\Output;
-use Alfresco\Render\Factory;
-use Alfresco\Render\HtmlString;
-use Alfresco\Stream\FileStreamFactory;
-use Alfresco\Stream\Stream;
-use Alfresco\Support\Link;
-use Illuminate\Config\Repository as Configuration;
-use Illuminate\Support\Collection;
 use RuntimeException;
-use Safe\DateTimeImmutable;
-
-use function Safe\file_get_contents;
-use function Safe\preg_match;
-use function Safe\preg_replace;
+use Alfresco\Manual\Node;
 use function Safe\system;
+use Alfresco\Support\Link;
+use Alfresco\Stream\Stream;
+use Safe\DateTimeImmutable;
+use Alfresco\Render\Factory;
+use function Safe\preg_match;
+use Alfresco\Render\HtmlString;
+use function Safe\preg_replace;
+use Alfresco\Contracts\Slotable;
+use Illuminate\Support\Collection;
+use function Safe\file_get_contents;
+use Alfresco\Stream\FileStreamFactory;
+use Alfresco\Contracts\DependsOnIndexes;
+use Illuminate\Config\Repository as Configuration;
+use Alfresco\Contracts\Generator as GeneratorContract;
 
 class Generator implements DependsOnIndexes, GeneratorContract
 {
@@ -225,14 +224,14 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderCData(Node $node): Slotable|string
     {
-        // These should likely be fixed in the manual 
+        // These should likely be fixed in the manual
         // if they are meant to be interpreted verbatim.
         // $content = preg_replace('/^\\n/', '', $node->value);
 
         /**
          * A literal listing of all or part of a program.
          *
-         * @see self::renderProgramListing() 
+         * @see self::renderProgramListing()
          */
         if ($programlisting = $node->parent('programlisting')) {
             return $this->render->codeSnippet($node->value, $programlisting->role());
@@ -240,6 +239,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
 
         /**
          * Text that a user sees or might see on a computer screen.
+         *
          * @see self::renderScreen()
          */
         if ($screen = $node->parent('screen')) {
@@ -256,6 +256,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     {
         /**
          * Text that a user sees or might see on a computer screen.
+         *
          * @see self::renderScreen()
          */
         if ($screen = $node->ancestor('screen')) {
@@ -324,7 +325,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderAuthor(Node $node): Slotable|string
     {
-        $authorgroup = $node->parent('authorgroup');
+        $authorgroup = $node->expectParent('authorgroup');
 
         if ($authorgroup->id() === 'authors') {
             return $this->render->tag('li');
@@ -452,13 +453,14 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderConstant(Node $node): Slotable|string
     {
-        // When a constant appear in a "title" we want to keep the change
-        // in design to a minimum. We will just wrap this in a code tag.
+        // When a constant appears in a title we want to keep the change in
+        // design to a minimum. We will just wrap this in a var tag and make it
+        // monospaced.
         if ($node->hasParent('title')) {
             return $this->render->tag(
-                as: 'code',
+                as: 'var',
                 attributes: [
-                    // 'class' => 'font-sans',
+                    'class' => 'font-mono',
                 ],
             );
         }
@@ -1463,7 +1465,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     protected function renderVarName(Node $node): Slotable|string
     {
         return $this->render->component('inline-code', [
-            'as' => 'var'
+            'as' => 'var',
         ]);
         // ->wrapSlot($this->render->component('link', [
         //     'link' => Link::internal('#todo'),

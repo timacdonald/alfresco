@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Alfresco\Website;
 
-use Alfresco\Contracts\Generator;
-use Alfresco\Contracts\Slotable;
-use Alfresco\Manual\Node;
-use Alfresco\Render\Factory;
-use Alfresco\Stream\FileStreamFactory;
-use Alfresco\Stream\Stream;
 use Closure;
-use Illuminate\Config\Repository as Configuration;
-use Illuminate\Support\Collection;
 use Stringable;
+use Alfresco\Manual\Node;
+use Alfresco\Stream\Stream;
+use Alfresco\Render\Factory;
+use Alfresco\Contracts\Slotable;
+use Alfresco\Contracts\Generator;
+use Illuminate\Support\Collection;
+use Alfresco\Stream\FileStreamFactory;
+use Illuminate\Config\Repository as Configuration;
 
 class FunctionIndex implements Generator
 {

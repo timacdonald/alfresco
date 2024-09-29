@@ -1,6 +1,8 @@
 {
     "rules": {
-        "strict_param": true,
-        "declare_strict_types": true
+        "blank_line_between_import_groups": false,
+        "declare_strict_types": true,
+        "ordered_imports": {"sort_algorithm": "length"},
+        "strict_param": true
     }
 }

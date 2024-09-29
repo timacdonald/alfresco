@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Alfresco\Manual;
 
-use RuntimeException;
 use XMLReader;
+use RuntimeException;
 
 class Manual
 {

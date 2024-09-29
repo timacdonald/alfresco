@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Alfresco\Render;
 
-use Alfresco\Contracts\Slotable;
 use Closure;
-use Illuminate\Config\Repository as Configuration;
-use Illuminate\Container\Container;
 use Stringable;
+use Alfresco\Contracts\Slotable;
+use Illuminate\Container\Container;
+use Illuminate\Config\Repository as Configuration;
 
 class Factory
 {

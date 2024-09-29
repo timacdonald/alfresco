@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Alfresco\Manual;
 
-use Illuminate\Config\Repository as Configuration;
-use RuntimeException;
 use XMLReader;
+use RuntimeException;
+use Illuminate\Config\Repository as Configuration;
 
 class Factory
 {

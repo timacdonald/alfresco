@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Alfresco\Website;
 
-use Alfresco\Contracts\Generator;
-use Alfresco\Contracts\Slotable;
+use RuntimeException;
 use Alfresco\Manual\Node;
+use Alfresco\Stream\Stream;
+use Illuminate\Support\Str;
 use Alfresco\Render\Factory;
 use Alfresco\Render\HtmlString;
-use Alfresco\Stream\FileStreamFactory;
-use Alfresco\Stream\Stream;
-use Illuminate\Config\Repository as Configuration;
+use Alfresco\Contracts\Slotable;
+use Alfresco\Contracts\Generator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use RuntimeException;
+use Alfresco\Stream\FileStreamFactory;
+use Illuminate\Config\Repository as Configuration;
 
 class TitleIndex implements Generator
 {
@@ -197,7 +197,7 @@ class TitleIndex implements Generator
             $title->hasParent('info.section.chapter.book.set') => [$title->parent('info.section'), 3 + $this->levelModifier],
             $title->hasParent('preface.book.set.set.set') => [$title->parent('preface'), 2 + $this->levelModifier],
             $title->hasParent('sect1.chapter.book.set') => [$title->parent('sect1'), 3 + $this->levelModifier],
-            $title->hasParent('section.chapter.book.set.set.set') && $title->parent('section')->hasId() => [$title->parent('section'), 3 + $this->levelModifier], // @phpstan-ignore method.nonObject
+            $title->hasParent('section.chapter.book.set.set.set') && $title->expectParent('section')->hasId() => [$title->parent('section'), 3 + $this->levelModifier],
             $title->hasParent('set') => [$title->parent('set'), 1 + $this->levelModifier],
             default => [null, 0]
         };
