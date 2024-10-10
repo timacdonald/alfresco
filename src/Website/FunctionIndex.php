@@ -98,6 +98,7 @@ class FunctionIndex implements Generator
         }
 
         if ($node->name === 'methodsynopsis' && $node->parent('refsect1')) {
+            // TODO think we can reset like we do in the image index.
             $wrapper = $this->render->wrapper(
                 before: "    new Method(\n        description:".$this->render->export($this->description).',',
                 after: new class(fn () => ($this->paramNumber = 1)) implements Stringable

@@ -6,6 +6,7 @@ namespace Alfresco\Website;
 
 use Alfresco\Date;
 use Alfresco\Output;
+use Alfresco\Render\Wrapper;
 use RuntimeException;
 use Alfresco\Manual\Node;
 use function Safe\system;
@@ -31,6 +32,8 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected int $tooltipIndex = 0;
 
+    protected $lazyRender = null;
+
     /**
      * Create a new instance.
      */
@@ -42,6 +45,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
         protected TitleIndex $titleIndex,
         protected EmptyChunkIndex $emptyChunkIndex,
         protected FunctionIndex $functionIndex,
+        protected ImageIndex $imageIndex,
     ) {
         //
     }
@@ -214,6 +218,7 @@ class Generator implements DependsOnIndexes, GeneratorContract
     {
         return [
             $this->titleIndex,
+            $this->imageIndex,
             $this->functionIndex,
             $this->emptyChunkIndex,
         ];
@@ -831,7 +836,32 @@ class Generator implements DependsOnIndexes, GeneratorContract
      */
     protected function renderMediaObject(Node $node): Slotable|string
     {
-        return '';
+        return $this->lazy = new class($this->render) implements Wrapper {
+            public string $alt;
+            public string $src;
+            public string $caption;
+
+            public function __construct(
+                private Factory $render,
+            ) {
+                //
+            }
+
+            public function before(): string
+            {
+                return '';
+            }
+
+            public function after(): string
+            {
+                return <<<HTML
+                <figure>
+                    <img src="{$this->src}" alt="{$this->alt}">
+                    <figcaption>{$this->caption}</figcaption>
+                </figure>
+                HTML;
+            }
+        };
     }
 
     /**
